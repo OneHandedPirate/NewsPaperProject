@@ -2,7 +2,7 @@ Shell-команды:
 
 Импортируем модели для работы с ними.
 
-from django.contrib.auth.models import User 
+from django.contrib.auth.models import User
 from news.models import *
 
 Создаем двух юзеров
