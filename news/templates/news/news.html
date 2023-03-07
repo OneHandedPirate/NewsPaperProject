@@ -1,0 +1,19 @@
+{% extends 'news/default.html' %}
+{% load news.custom_filters %}
+
+{% block title %}
+    News List
+{% endblock %}
+
+{% block content %}
+    <h1>Количество статей: {{ news|length }}</h1>
+{% for n in news %}
+    <hr>
+    <h2>{{ n.title |censor}}</h2>
+    <p>Дата: {{ n.publish_time|date:'d.m.Y'}}</p>
+    <p>{{ n.text | truncatechars:50 | censor}}</p>
+    <a href="{% url 'post' n.pk %}">Подробнее</a>
+    <hr>
+
+{% endfor %}
+{% endblock %}
