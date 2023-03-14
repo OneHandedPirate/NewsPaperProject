@@ -6,11 +6,31 @@
 {% endblock %}
 
 {% block content %}
-    <h1>{{ post.title | censor }}</h1>
-    <p>Опубликовано: {{ post.publish_time | date:'d.m.Y f' }}</p>
-    <h6>Автор: {{ post.author }}</h6>
+    <h1 class="fw-bold mb-4">{{ post.title | censor }}</h1>
     <hr>
-    <p>{{ post.text | censor}}</p>
+    <div class="row">
+        <div class="col-4 text-start">
+            <span>Опубликовано: {{ post.publish_time | date:'d.m.Y f' }}</span>
+            <h6>Автор: {{ post.author }}</h6>
+        </div>
+        <div class="d-flex col-8 text-end justify-content-end align-items-center">
+            <div>
+                <a class="btn btn-secondary" href="{% url 'post_update' post.pk %}">Редактировать</a>
+            </div>
+            <div>
+                <button type="button" class="btn btn-secondary mx-2" data-bs-toggle="modal" data-bs-target="#deleteModal{{ post.pk }}">Удалить</button>
+            </div>
+            <div>
+                <a class="btn btn-secondary" href="{% if request.META.HTTP_REFERER %}{{ request.META.HTTP_REFERER }}{% else %}{% url 'home' %}{% endif %}">Назад</a>
+            </div>
+        </div>
+    </div>
     <hr>
+    <p class>{{ post.text | linebreaks }}</p>
+    <hr>
+
+
+
+    {% include 'news/delete_modal.html' %}
 
 {% endblock %}

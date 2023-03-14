@@ -1,0 +1,21 @@
+<div class="modal fade" id="deleteModal{{ post.pk }}" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+
+                <h1 class="modal-title fs-5" id="exampleModalLabel">Подтверждение</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                Вы действительно хотите удалить запись<br>"{{ post.title }}"?
+            </div>
+            <div class="modal-footer">
+                <form method="post" action="{% url 'post_delete' post.pk %}">
+                    {% csrf_token %}
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Произошла чудовищная ошибка</button>
+                    <button type="submit" class="btn btn-danger" id="confirm-delete">Удалить</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

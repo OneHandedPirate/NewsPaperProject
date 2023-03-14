@@ -57,6 +57,10 @@ class Post(models.Model, Attitude):
     def __str__(self):
         return self.title
 
+    def get_absolute_url(self):  # добавим абсолютный путь, чтобы после создания нас перебрасывало на страницу с товаром
+        return reverse_lazy('post', kwargs={'pk': self.id})
+
+
 
 class PostCategory(models.Model):
     post = models.ForeignKey(Post, on_delete=models.CASCADE)

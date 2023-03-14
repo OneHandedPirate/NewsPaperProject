@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'news',
     'accounts',
+    'django_filters',
 ]
 
 SITE_ID = 1

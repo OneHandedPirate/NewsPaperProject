@@ -6,14 +6,13 @@
 {% endblock %}
 
 {% block content %}
-    <h1>Количество статей: {{ news|length }}</h1>
-{% for n in news %}
-    <hr>
-    <h2>{{ n.title |censor}}</h2>
-    <p>Дата: {{ n.publish_time|date:'d.m.Y'}}</p>
-    <p>{{ n.text | truncatechars:50 | censor}}</p>
-    <a href="{% url 'post' n.pk %}">Подробнее</a>
-    <hr>
-
+    <h1 class="mb-5">Главная станица</h1>
+<div class="news-list mb-4">
+{% for post in news %}
+    {% include 'news/post_in_list.html' %}
 {% endfor %}
+</div>
+
+
+
 {% endblock %}
