@@ -1,3 +1,4 @@
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.shortcuts import redirect
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
 
@@ -11,7 +12,9 @@ menu = [{'title': 'Home', 'url_name': 'home'},
         {'title': 'Search', 'url_name': 'search'},
         {'title': 'Add post', 'url_name': 'add'},
         {'title': 'About Us', 'url_name': ''},
-        {'title': 'Contact Us', 'url_name': ''},]
+        {'title': 'Contact Us', 'url_name': ''},
+        {'title': 'Login', 'url_name': 'account_login'},
+        {'title': 'Logout', 'url_name': 'account_logout'},]
 
 
 class News(ListView):
@@ -30,7 +33,7 @@ class PostView(DetailView):
     extra_context = {'menu': menu}
 
 
-class PostUpdateView(UpdateView):
+class PostUpdateView(LoginRequiredMixin, UpdateView):
     template_name = 'news/add_post.html'
     form_class = PostForm
     extra_context = {'menu': menu}
@@ -40,7 +43,7 @@ class PostUpdateView(UpdateView):
         return Post.objects.get(pk=id)
 
 
-class PostDeleteView(DeleteView):
+class PostDeleteView(LoginRequiredMixin, DeleteView):
     model = Post
     context_object_name = 'post'
     success_url = reverse_lazy('home')
@@ -73,7 +76,7 @@ class SearchPost(ListView):
         return PostFilter(self.request.GET, queryset=queryset).qs
 
 
-class AddPost(CreateView):
+class AddPost(LoginRequiredMixin, CreateView):
     form_class = PostForm
     template_name = 'news/add_post.html'
     extra_context = {'menu': menu}
@@ -85,4 +88,18 @@ class AddPost(CreateView):
             form.save()
 
         return redirect('home')
+
+
+# class MyLogin(LoginView):
+#     template_name = 'account/login.html'
+#
+#     def get_context_data(self, **kwargs):
+#         context = super().get_context_data(**kwargs)
+#         return context
+
+
+
+
+
+
 

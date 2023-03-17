@@ -1,5 +1,6 @@
-import django.forms as forms
+from django import forms
 from .models import Post
+
 
 class PostForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):

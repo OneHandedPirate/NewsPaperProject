@@ -1,0 +1,31 @@
+{% extends "news/default.html" %}
+
+{% block title %}Register{% endblock %}
+
+{% block content %}
+    <h1 class="mb-5">Регистрация</h1>
+    <div class="container d-flex flex-column">
+        <form method="post" action="{% url 'account_signup' %}">
+            {% csrf_token %}
+            {%  for f in form %}
+                <div>{{ f }}</div>
+            {% endfor %}
+            {% if form.errors %}
+                <div class="d-flex justify-content-center">
+                    <ul class="list-unstyled list-group w-50">
+                        {% for name, errors in form.errors.items %}
+                            {% for error in errors %}
+                                <li class="list-group-item list-group-item-danger">{{ error }}</li>
+                            {% endfor %}
+                        {% endfor %}
+                    </ul>
+                </div>
+            {% endif %}
+            <button class="btn btn-secondary mt-3" type="submit">Зарегистрироваться</button>
+        </form>
+        <hr class="w-50 align-self-center">
+    </div>
+
+   <p>Уже зарегистрированы? </p>
+   <a class="btn btn-secondary " href="{% url 'account_login' %}">Войти</a>
+{% endblock %}

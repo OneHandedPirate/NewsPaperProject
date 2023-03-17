@@ -1,8 +1,7 @@
-from django.db import models
-from django.contrib.auth.models import User
 from django.db.models import Sum
 from django.urls import reverse_lazy
-
+from django.db import models
+from django.contrib.auth.models import User
 
 class Attitude:
     '''Миксин-класс для моделей с полем rating'''
@@ -59,7 +58,6 @@ class Post(models.Model, Attitude):
 
     def get_absolute_url(self):  # добавим абсолютный путь, чтобы после создания нас перебрасывало на страницу с товаром
         return reverse_lazy('post', kwargs={'pk': self.id})
-
 
 
 class PostCategory(models.Model):

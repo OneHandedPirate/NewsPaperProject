@@ -11301,3 +11301,12 @@ textarea.form-control-lg {
 a.fa-brands {
   color: whitesmoke;
 }
+
+input[type="email"],
+input[type="password"] {
+  padding: .375rem .75rem;
+  border: 1px solid #ced4da;
+  border-radius: .25rem;
+  width: 200px;
+  margin-bottom: 1rem;
+}

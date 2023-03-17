@@ -1,0 +1,36 @@
+{% extends 'news/default.html' %}
+
+{% load socialaccount %}
+
+{% block title %}Login{% endblock %}
+{% block content %}
+   <h1 class="mb-4">Login</h1>
+    <form method="post" action="{% provider_login_url 'google' process='login' %}">
+        {% csrf_token %}
+        <button type="submit" class="fa-brands fa-google btn btn-primary mb-4" title="Войти через Google"></button>
+    </form>
+        <div class="container d-flex flex-column">
+    <form method="post" action="{% url 'account_login' %}">
+       {% csrf_token %}
+        <div>{{ form.login }}</div>
+
+        <div class="mb-3">{{ form.password }}</div>
+        {% if form.errors %}
+            <div class="d-flex justify-content-center">
+                <ul class="list-unstyled list-group w-50">
+                    {% for name, errors in form.errors.items %}
+                        {% for error in errors %}
+                            <li class="list-group-item list-group-item-danger">{{ error }}</li>
+                        {% endfor %}
+                    {% endfor %}
+                </ul>
+            </div>
+        {% endif %}
+
+        <button class="btn-secondary btn mt-3 mb-3" type="submit">Войти</button>
+    </form>
+    <hr class="w-50 align-self-center">
+    </div>
+
+    <a class="btn btn-secondary" href="{% url 'account_signup' %}" title="Нажмите, чтобы зарегистироваться">Регистрация</a>
+{% endblock %}
