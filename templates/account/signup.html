@@ -8,8 +8,13 @@
         <form method="post" action="{% url 'account_signup' %}">
             {% csrf_token %}
             {%  for f in form %}
-                <div>{{ f }}</div>
+                {% if f == form.become_author %}
+                {% else %}
+                    <div>{{ f }}</div>
+                {% endif %}
             {% endfor %}
+            <div class="mb-3"><span class="me-3">{{   form.become_author.label }}</span>{{ form.become_author }}</div>
+
             {% if form.errors %}
                 <div class="d-flex justify-content-center">
                     <ul class="list-unstyled list-group w-50">

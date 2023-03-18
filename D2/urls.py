@@ -21,5 +21,8 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('news/', include('news.urls')),
     path('accounts/', include('allauth.urls')),
-
 ]
+
+handler403 = 'news.views.permission_denied_view'
+handler404 = 'news.views.page_not_found_view'
+

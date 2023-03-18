@@ -22,7 +22,6 @@ class Author(models.Model):
         return self.author_user.get_username()
 
     def update_rating(self):
-        #post_set.all() - объекты post, связанные с автором.
         posts_rating = self.post_set.all().aggregate(posts_rating=Sum('rating'))
         p_r = posts_rating.get('posts_rating', 0) * 3
 

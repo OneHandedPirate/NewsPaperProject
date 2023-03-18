@@ -1,6 +1,8 @@
-from django.contrib.auth.mixins import LoginRequiredMixin
-from django.shortcuts import redirect
+from django.contrib.auth.decorators import login_required
+from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
+from django.shortcuts import redirect, render
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
+from allauth.account.views import SignupView
 
 from .models import *
 from .filter import PostFilter
@@ -33,7 +35,9 @@ class PostView(DetailView):
     extra_context = {'menu': menu}
 
 
-class PostUpdateView(LoginRequiredMixin, UpdateView):
+class PostUpdateView(PermissionRequiredMixin, LoginRequiredMixin, UpdateView):
+    permission_required = ('news.change_post',)
+
     template_name = 'news/add_post.html'
     form_class = PostForm
     extra_context = {'menu': menu}
@@ -43,7 +47,8 @@ class PostUpdateView(LoginRequiredMixin, UpdateView):
         return Post.objects.get(pk=id)
 
 
-class PostDeleteView(LoginRequiredMixin, DeleteView):
+class PostDeleteView(PermissionRequiredMixin, LoginRequiredMixin, DeleteView):
+    permission_required = 'news.delete_post'
     model = Post
     context_object_name = 'post'
     success_url = reverse_lazy('home')
@@ -76,7 +81,9 @@ class SearchPost(ListView):
         return PostFilter(self.request.GET, queryset=queryset).qs
 
 
-class AddPost(LoginRequiredMixin, CreateView):
+class AddPost(PermissionRequiredMixin, LoginRequiredMixin, CreateView):
+    permission_required = ('news.add_post',)
+
     form_class = PostForm
     template_name = 'news/add_post.html'
     extra_context = {'menu': menu}
@@ -89,17 +96,22 @@ class AddPost(LoginRequiredMixin, CreateView):
 
         return redirect('home')
 
+@login_required
+def upgrade_to_author(request):
+    user = request.user
+    common_group = Group.objects.get(name='common')
+    authors_group = Group.objects.get(name='authors')
 
-# class MyLogin(LoginView):
-#     template_name = 'account/login.html'
-#
-#     def get_context_data(self, **kwargs):
-#         context = super().get_context_data(**kwargs)
-#         return context
+    #Если юзер не в группе common (например, он зашел через Google), то добавляем его сразу в обе группы
+    if not request.user.groups.filter(name='common').exists():
+        common_group.user_set.add(user)
+    if not request.user.groups.filter(name='authors').exists():
+        authors_group.user_set.add(user)
+    return redirect('home')
 
 
+def permission_denied_view(request, exception):
+    return render(request, '403.html', status=403)
 
-
-
-
-
+def page_not_found_view(request, exception):
+    return render(request, '404.html', status=404)

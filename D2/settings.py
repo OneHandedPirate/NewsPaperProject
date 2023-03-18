@@ -15,8 +15,6 @@ from django.urls import reverse
 
 from django.conf.global_settings import STATICFILES_DIRS
 
-import news.forms
-
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -152,4 +150,6 @@ AUTHENTICATION_BACKENDS = [
     'django.contrib.auth.backends.ModelBackend',
     'allauth.account.auth_backends.AuthenticationBackend',
 ]
+
+ACCOUNT_FORMS = {'signup': 'news.forms.CustomSignupForm'}
 

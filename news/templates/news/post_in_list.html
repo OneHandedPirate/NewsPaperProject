@@ -12,7 +12,7 @@
                 <a class="btn btn-secondary btn-block w-100" href="{% url 'post' post.pk %}">К посту</a>
             </div>
 
-            {% if  request.user.is_authenticated %}
+            {% if request.user.is_authenticated and user|is_author %}
                 <div class="w-100">
                     <a class="btn btn-secondary btn-block w-100 mb-2 mt-2" href="{% url 'post_update' post.pk %}">Редактировать</a>
                 </div>

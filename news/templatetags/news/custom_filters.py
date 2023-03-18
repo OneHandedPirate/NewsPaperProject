@@ -16,3 +16,7 @@ def censor(value):
         original_text[bad_word] = '*нехорошее слово*'
 
     return ' '.join(original_text)
+
+@register.filter(name="is_author")
+def has_group(user):
+    return user.groups.filter(name='authors').exists()

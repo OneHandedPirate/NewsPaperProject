@@ -1,5 +1,7 @@
 from django import forms
 from .models import Post
+from allauth.account.forms import SignupForm
+from django.contrib.auth.models import Group
 
 
 class PostForm(forms.ModelForm):
@@ -27,6 +29,18 @@ class PostForm(forms.ModelForm):
                                           'placeholder': 'Введите текст'}),
             'category': forms.SelectMultiple(attrs={'class': 'form-select', 'size': 2}),
         }
+
+class CustomSignupForm(SignupForm):
+    become_author = forms.BooleanField(label='Стать автором', required=False)
+
+    def save(self, request):
+        user = super(CustomSignupForm, self).save(request)
+        common_group = Group.objects.get(name='common')
+        common_group.user_set.add(user)
+        if self.cleaned_data['become_author']:
+            authors_group = Group.objects.get(name='authors')
+            authors_group.user_set.add(user)
+        return user
 
 
 
