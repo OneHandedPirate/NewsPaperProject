@@ -1,0 +1,18 @@
+{% extends 'news/default.html' %}
+{% load news.custom_filters %}
+
+{% block title %}
+    News List
+{% endblock %}
+
+{% block content %}
+    <h1 class="mb-5">Главная страница</h1>
+    <div class="news-list mb-4">
+        {% for post in news %}
+            {% include 'news/postInList.html' %}
+        {% endfor %}
+    </div>
+
+
+
+{% endblock %}

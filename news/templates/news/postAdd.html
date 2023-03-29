@@ -1,0 +1,26 @@
+{% extends 'news/default.html' %}
+
+{% block title %}{% if 'edit' in request.path %}Редактирование{% else %}Добавление{% endif %} поста{% endblock %}
+
+{% block content %}
+    <h1>{% if 'edit' in request.path %}Редактирование{% else %}Добавление{% endif %} поста</h1>
+    <form method="post" class="mt-4">
+        {% csrf_token %}
+        <div class="row justify-content-center">
+            {% for i in form %}
+                {% if i.label == 'Текст' or i.label == 'Название' %}
+                    <div class="col-9 mt-4 align-content-center">
+                        {{ i }}
+                    </div>
+                {% else %}
+                    <div class="col-3">
+                        <label class="form-label fs-4" for="id_{{ i.name }}">{{ i.label }}</label>
+                        {{ i }}
+                    </div>
+                {% endif %}
+            {% endfor %}
+        </div>
+        <button type="submit" class="btn btn-secondary mt-4">{% if 'edit' in request.path %}Отредактировать{% else %}
+            Добавить{% endif %}</button>
+    </form>
+{% endblock %}

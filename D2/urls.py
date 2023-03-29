@@ -19,8 +19,8 @@ from django.urls import path, include
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('news/', include('news.urls')),
-    path('accounts/', include('allauth.urls')),
+    path('news/', include('news.urls'), name='news'),
+    path('accounts/', include('allauth.urls'), name='accounts'),
 ]
 
 handler403 = 'news.views.permission_denied_view'

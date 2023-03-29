@@ -2,6 +2,8 @@ from django.db.models import Sum
 from django.urls import reverse_lazy
 from django.db import models
 from django.contrib.auth.models import User
+from requests import delete
+
 
 class Attitude:
     '''Миксин-класс для моделей с полем rating'''
@@ -33,9 +35,16 @@ class Author(models.Model):
 
 class Category(models.Model):
     name = models.CharField(max_length=100, unique=True)
+    subscribers = models.ManyToManyField(User, through='CategorySubscriber')
 
     def __str__(self):
         return self.name
+
+    def subscribe(self):
+        return reverse_lazy('subscribe', kwargs={'pk': self.id})
+
+    def unsubscribe(self):
+        return reverse_lazy('unsubscribe', kwargs={'pk': self.id})
 
 
 class Post(models.Model, Attitude):
@@ -55,7 +64,7 @@ class Post(models.Model, Attitude):
     def __str__(self):
         return self.title
 
-    def get_absolute_url(self):  # добавим абсолютный путь, чтобы после создания нас перебрасывало на страницу с товаром
+    def get_absolute_url(self):
         return reverse_lazy('post', kwargs={'pk': self.id})
 
 
@@ -64,8 +73,13 @@ class PostCategory(models.Model):
     category = models.ForeignKey(Category, on_delete=models.CASCADE)
 
 
+class CategorySubscriber(models.Model):
+    category = models.ForeignKey(Category, on_delete=models.CASCADE)
+    subscriber = models.ForeignKey(User, on_delete=models.CASCADE)
+
+
 class Comment(models.Model, Attitude):
-    post = models.ForeignKey(Post, on_delete=models.CASCADE)
+    post = models.ForeignKey(Post, on_delete=models.CASCADE, related_name='comments')
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     text = models.TextField()
     publish_time = models.DateTimeField(auto_now_add=True)
@@ -74,4 +88,6 @@ class Comment(models.Model, Attitude):
     def __str__(self):
         return self.text
 
+    def get_delete_url(self):
+        return reverse_lazy('delete_comment', kwargs={'pk': self.pk})
 

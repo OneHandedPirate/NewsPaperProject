@@ -1,4 +1,6 @@
 from django import template
+from django.utils import timezone
+from news.models import Post
 
 register = template.Library()
 
@@ -20,3 +22,7 @@ def censor(value):
 @register.filter(name="is_author")
 def has_group(user):
     return user.groups.filter(name='authors').exists()
+
+@register.filter(name="is_post_author")
+def is_post_author(user, post):
+    return user == post.author.author_user

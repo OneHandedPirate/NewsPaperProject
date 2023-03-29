@@ -11302,19 +11302,3 @@ a.fa-brands {
   color: whitesmoke;
 }
 
-input[type="email"],
-input[type="password"] {
-  padding: .375rem .75rem;
-  border: 1px solid #ced4da;
-  border-radius: .25rem;
-  width: 200px;
-  margin-bottom: 1rem;
-}
-
-.alert {
-    transition: all 0.5s ease-in-out;
-    opacity: 1;
-}
-.alert.fade:not(.show) {
-    opacity: 0;
-}
