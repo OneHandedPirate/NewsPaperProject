@@ -11,11 +11,6 @@ from news.tasks import notify_subscribers_weekly
 
 logger = logging.getLogger(__name__)
 
-
-def my_job():
-    notify_subscribers_weekly()
-
-
 def delete_old_job_executions(max_age=604_800):
     """This job deletes all apscheduler job executions older than `max_age` from the database."""
     DjangoJobExecution.objects.delete_old_job_executions(max_age)
@@ -29,9 +24,11 @@ class Command(BaseCommand):
         scheduler.add_jobstore(DjangoJobStore(), "default")
 
         scheduler.add_job(
-            my_job,
-            trigger=CronTrigger(week="1"),
-            id="my_job",  # уникальный айди
+            notify_subscribers_weekly(),
+            trigger=CronTrigger(
+                day_of_week="mon", hour="00", minute="00"
+            ),
+            id="notify",
             max_instances=1,
             replace_existing=True,
         )
