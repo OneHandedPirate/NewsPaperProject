@@ -5,8 +5,8 @@
         {% if post.comments.all %}
             {% for comment in post.comments.all %}
                 <!--Comment-->
-                <li class="border border-2 rounded-3 mb-3">
-                    <div class="row my-2 px-3">
+                <li class="shadow rounded-3 mb-3">
+                    <div class="row p-2">
                         <span class="me-auto"><strong>Автор: </strong>{{ comment.user }}</span>
                         <span class="ms-auto">{{ comment.publish_time|date:"d.m.Y G:i:s" }}</span>
                     </div>

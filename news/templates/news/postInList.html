@@ -1,6 +1,6 @@
 {% load news.custom_filters %}
 
-<div class="container-fluid col-sm-12 col-lg-10 rounded-5 border border-2 border-secondary p-4 mt-3 mb-3"
+<div class="container-fluid col-sm-12 col-lg-10 rounded-5 shadow-lg p-4 my-4"
      style="border-radius: 15px">
     <div class="row justify-content-between">
         <div class="text-start col-8 overflow-auto">
@@ -18,15 +18,15 @@
         </div>
         <div class="text-end col-3 d-flex flex-column align-items-end justify-content-center overflow-hidden">
             <div class="w-100">
-                <a class="btn btn-secondary btn-block w-100" href="{% url 'post' post.pk %}">К посту</a>
+                <a class="btn btn-secondary btn-block w-100 shadow" href="{% url 'post' post.pk %}">К посту</a>
             </div>
 
             {% if request.user.is_authenticated and user|is_author and user|is_post_author:post %}
                 <div class="w-100">
-                    <a class="btn btn-secondary btn-block w-100 mb-3 mt-3" href="{% url 'post_update' post.pk %}">Редактировать</a>
+                    <a class="btn btn-secondary btn-block w-100 my-3 shadow" href="{% url 'post_update' post.pk %}">Редактировать</a>
                 </div>
                 <div class="w-100">
-                    <button type="button" class="btn btn-secondary btn-block w-100" data-bs-toggle="modal"
+                    <button type="button" class="btn btn-secondary btn-block w-100 shadow" data-bs-toggle="modal"
                             data-bs-target="#deleteModal{{ post.pk }}">Удалить
                     </button>
                 </div>

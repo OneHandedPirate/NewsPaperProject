@@ -34,8 +34,8 @@ function addComment(event) {
         .then((data) => {
             if (data.success) {
                 const commentItem = `
-                <li class="border border-2 rounded-3 mb-3">
-                    <div class="row my-2 px-3">
+                <li class="shadow rounded-3 mb-3">
+                    <div class="row px-2">
                         <span class="me-auto"><strong>Автор: </strong>${data.comment_user}</span>
                         <span class="ms-auto">${data.comment_publish_time}</span>
                     </div>

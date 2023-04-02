@@ -5,15 +5,11 @@ from django.contrib.auth.models import Group, User
 
 
 class PostForm(forms.ModelForm):
-    # def __init__(self, *args, **kwargs):
-    #     super().__init__(*args, **kwargs)
-    #     self.fields['author'].empty_label = 'Выбор автора'
 
     class Meta:
         model = Post
         fields = ['type', 'category', 'title', 'text']
         labels = {
-            # 'author': 'Автор',
             'type': 'Тип поста',
             'category': 'Категории',
             'title': 'Название',
@@ -21,7 +17,6 @@ class PostForm(forms.ModelForm):
         }
 
         widgets = {
-            # 'author': forms.Select(attrs={'class': 'form-select form-select-sm'}, ),
             'type': forms.Select(attrs={'class': 'form-select form-select-sm'}),
             'title': forms.TextInput(attrs={'class': 'form-control',
                                             'placeholder': 'Введите название'}),

@@ -4,7 +4,7 @@
         {% if user.is_authenticated %}
             {% if user not in cat.subscribers.all %}
                 <button
-                        class="btn-sm btn-outline-secondary m-1 "
+                        class="btn-sm btn-outline-secondary m-1 shadow"
                         data-url="{% url 'subscribe' cat.pk %}"
                         title="Нажмите, чтобы подписаться на категорию"
                         onclick="subscribeCategory(event)"
@@ -13,7 +13,7 @@
                 </button>
             {% else %}
                 <button
-                        class="btn-sm btn-secondary m-1"
+                        class="btn-sm btn-secondary m-1 shadow"
                         title="Нажмите, чтобы отписаться"
                         data-url="{% url 'unsubscribe' cat.pk %}"
                         onclick="unsubscribeCategory(event)"
@@ -22,7 +22,7 @@
                 </button>
             {% endif %}
         {% else %}
-            <span class="btn-sm btn-secondary mt-1"
+            <span class="btn-sm btn-secondary m-1 shadow"
                   title="Войдите, чтобы подписаться на категорию">{{ cat.name }}</span>
         {% endif %}
     {% endfor %}
