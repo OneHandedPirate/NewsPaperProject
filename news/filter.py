@@ -1,5 +1,3 @@
-import django_filters
-from django.forms import SelectDateWidget
 from django_filters import FilterSet
 from .models import Post
 
@@ -20,9 +18,3 @@ class PostFilter(FilterSet):
             'title': ['icontains'],
             'publish_time': ['gte'],
             }
-
-
-
-
-
-

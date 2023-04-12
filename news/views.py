@@ -6,7 +6,7 @@ from django.shortcuts import redirect, render, get_object_or_404
 from django.views.decorators.http import require_POST
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
 from django.utils import timezone
-from django.db.models import Count, Prefetch
+from django.db.models import Count
 
 from .models import *
 from .filter import PostFilter
@@ -37,8 +37,8 @@ class News(ListView):
         user = self.request.user
         if user.is_authenticated:
             subscribed_categories = Category.objects.filter(categorysubscriber__subscriber=user)
-            user_posts = Post.objects.filter(author__author_user=user)
             context['user_category'] = subscribed_categories
+            user_posts = Post.objects.filter(author__author_user=user)
             context['user_posts'] = user_posts
 
         return context
@@ -73,6 +73,8 @@ class PostView(DetailView):
         if user.is_authenticated:
             subscribed_categories = Category.objects.filter(categorysubscriber__subscriber=user)
             context['user_category'] = subscribed_categories
+            user_posts = Post.objects.filter(author__author_user=user)
+            context['user_posts'] = user_posts
 
         return context
 

@@ -32,8 +32,8 @@ function addComment(event) {
                         <span class="ms-auto">${data.comment_publish_time}</span>
                     </div>
                     <hr class="my-0 mx-auto" style="width: 95%">
-                    <div class="m-3 text-start">
-                        <p style="word-break: break-word">${data.comment_text}</p>
+                    <div class="mx-3 mt-3 text-start">
+                        <p style="word-break: break-word" class="m-0 pb-3">${data.comment_text}</p>
                     </div>
                     <hr class="my-0 mx-auto" style="width: 95%">
                     <button 

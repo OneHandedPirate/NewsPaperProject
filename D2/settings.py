@@ -137,6 +137,7 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/4.1/howto/static-files/
 
 STATIC_URL = 'static/'
+STATIC_ROOT = BASE_DIR / 'static'
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.1/ref/settings/#default-auto-field
@@ -165,12 +166,11 @@ AUTHENTICATION_BACKENDS = [
 ACCOUNT_FORMS = {'signup': 'news.forms.CustomSignupForm', }
 
 #Отправка email
-EMAIL_HOST = 'smtp.mail.ru'
-EMAIL_PORT = 2525
-EMAIL_USE_SSL = False
-EMAIL_USE_TLS = True
+EMAIL_HOST = "smtp.gmail.com"
 EMAIL_HOST_USER = EMAIL
 EMAIL_HOST_PASSWORD = EMAIL_PASSWORD
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
 DEFAULT_FROM_EMAIL = EMAIL
 
 

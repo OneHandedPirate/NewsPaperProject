@@ -20,8 +20,7 @@
 </head>
 <body class="d-flex flex-column h-100">
 
-{% with is_authenticated=request.user.is_authenticated is_author=user|is_author %}
-
+{% with is_authenticated=request.user.is_authenticated is_author=request.user|is_author %}
     <!-- Responsive navbar-->
 
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
@@ -104,11 +103,11 @@
             <p>© 2023 This site is created for educational purposes by OneHandedPirate</p>
         </div>
         <div class="text-end col-4 ">
-            <a class="fa-brands fa-github fa-2xl m-1 text-decoration-none" href="https://github.com/OneHandedPirate"
+            <a class="fa-brands fa-github fa-2xl m-1 text-decoration-none" href="https://github.com/OneHandedPirate" style="height:25px"
                target="_blank"></a>
-            <a class="fa-brands fa-vk fa-2xl m-1 text-decoration-none" href="https://vk.com/onehandedpirate"
+            <a class="fa-brands fa-vk fa-2xl m-1 text-decoration-none" href="https://vk.com/onehandedpirate" style="height:25px"
                target="_blank"></a>
-            <a class="fa-brands fa-reddit fa-2xl m-1 text-decoration-none"
+            <a class="fa-brands fa-reddit fa-2xl m-1 text-decoration-none" style="height:25px"
                href="https://www.reddit.com/user/OneHandedPirateMKII" target="_blank"></a>
         </div>
     </div>

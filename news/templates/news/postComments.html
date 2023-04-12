@@ -12,8 +12,8 @@
                         <span class="ms-auto">{{ comment.publish_time|date:"d.m.Y G:i:s" }}</span>
                     </div>
                     <hr class="my-0 mx-auto" style="width: 95%">
-                    <div class="m-3 text-start">
-                        <p style="word-break: break-word">{{ comment.text }}</p>
+                    <div class="mx-3 mt-3 text-start" >
+                        <p style="word-break: break-word" class="m-0 pb-3">{{ comment.text }}</p>
                     </div>
                     {% if user == comment.user %}
                         <hr class="my-0 mx-auto" style="width: 95%">

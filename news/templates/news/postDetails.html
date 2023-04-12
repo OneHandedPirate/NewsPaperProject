@@ -17,18 +17,18 @@
         <div class="d-flex col-8 text-end justify-content-end align-items-center">
             {% if  is_authenticated and is_author and post in user_posts %}
                 <div>
-                    <a class="btn btn-secondary shadow" href="{% url 'post_update' post.pk %}">Редактировать</a>
+                    <a class="btn btn-secondary shadow" href="{% url 'post_update' post.pk %}">Edit</a>
                 </div>
                 <div>
                     <button type="button" class="btn btn-secondary mx-2 shadow" data-bs-toggle="modal"
-                            data-bs-target="#deleteModal{{ post.pk }}">Удалить
+                            data-bs-target="#deleteModal{{ post.pk }}">Del
                     </button>
                 </div>
                 {% include 'news/postDeleteModal.html' %}
             {% endif %}
             <div>
                 <a class="btn btn-secondary shadow" href="
-                        {% if request.META.HTTP_REFERER %}{{ request.META.HTTP_REFERER }}{% else %}{% url 'home' %}{% endif %}">Назад</a>
+                        {% if request.META.HTTP_REFERER %}{{ request.META.HTTP_REFERER }}{% else %}{% url 'home' %}{% endif %}">Back</a>
             </div>
         </div>
     </div>
