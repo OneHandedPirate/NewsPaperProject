@@ -2,7 +2,7 @@ from django.db.models import Sum
 from django.urls import reverse_lazy
 from django.db import models
 from django.contrib.auth.models import User
-from requests import delete
+from django.core.cache import cache
 
 
 class Attitude:
@@ -66,6 +66,15 @@ class Post(models.Model, Attitude):
 
     def get_absolute_url(self):
         return reverse_lazy('post', kwargs={'pk': self.id})
+
+    def save(self, *args, **kwargs):
+        super().save(*args, **kwargs)
+        cache.delete(f'post_{self.pk}')
+        cache.delete('posts_list')
+
+    def delete(self, *args, **kwargs):
+        super().delete(*args, **kwargs)
+        cache.delete('posts_list')
 
 
 class PostCategory(models.Model):

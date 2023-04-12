@@ -50,7 +50,9 @@ INSTALLED_APPS = [
     'allauth.socialaccount',
     'allauth.socialaccount.providers.google',
     'widget_tweaks',
-    'django_apscheduler'
+    'django_apscheduler',
+
+    'debug_toolbar'
 ]
 
 SITE_ID = 1
@@ -63,6 +65,8 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+
+    'debug_toolbar.middleware.DebugToolbarMiddleware',
 ]
 
 ROOT_URLCONF = 'D2.urls'
@@ -158,7 +162,7 @@ AUTHENTICATION_BACKENDS = [
     'allauth.account.auth_backends.AuthenticationBackend',
 ]
 
-ACCOUNT_FORMS = {'signup': 'news.forms.CustomSignupForm',}
+ACCOUNT_FORMS = {'signup': 'news.forms.CustomSignupForm', }
 
 #Отправка email
 EMAIL_HOST = 'smtp.mail.ru'
@@ -171,5 +175,17 @@ DEFAULT_FROM_EMAIL = EMAIL
 
 
 APSCHEDULER_DATETIME_FORMAT = "N j, Y, f:s a"
-APSCHEDULER_RUN_NOW_TIMEOUT = 25  # Seconds
+APSCHEDULER_RUN_NOW_TIMEOUT = 25
 
+
+CACHES = {
+    'default': {
+        'BACKEND': 'django.core.cache.backends.filebased.FileBasedCache',
+        'LOCATION': BASE_DIR / 'cache'
+    }
+}
+
+#Debug Tool Bar Settings
+INTERNAL_IPS = [
+    '127.0.0.1',
+]

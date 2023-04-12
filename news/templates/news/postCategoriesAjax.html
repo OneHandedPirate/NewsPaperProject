@@ -1,8 +1,8 @@
 <div class="btn-group d-flex flex-wrap" role="group" aria-label="Категории">
     <span class="me-2 my-auto">Категории:</span>
     {% for cat in post.category.all %}
-        {% if user.is_authenticated %}
-            {% if user not in cat.subscribers.all %}
+        {% if is_authenticated %}
+            {% if cat not in user_category %}
                 <button
                         class="btn-sm btn-outline-secondary m-1 shadow"
                         data-url="{% url 'subscribe' cat.pk %}"

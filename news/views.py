@@ -6,6 +6,7 @@ from django.shortcuts import redirect, render, get_object_or_404
 from django.views.decorators.http import require_POST
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
 from django.utils import timezone
+from django.db.models import Count, Prefetch
 
 from .models import *
 from .filter import PostFilter
@@ -27,9 +28,28 @@ class News(ListView):
     model = Post
     template_name = 'news/postList.html'
     context_object_name = 'news'
-    queryset = Post.objects.order_by('-publish_time')
+    queryset = Post.objects.order_by('-publish_time').annotate(comment_count=Count('comments')).prefetch_related('category')
     extra_context = {'menu': menu}
     paginate_by = 10
+
+    def get_context_data(self, *args, **kwargs):
+        context = super().get_context_data(*args, **kwargs)
+        user = self.request.user
+        if user.is_authenticated:
+            subscribed_categories = Category.objects.filter(categorysubscriber__subscriber=user)
+            user_posts = Post.objects.filter(author__author_user=user)
+            context['user_category'] = subscribed_categories
+            context['user_posts'] = user_posts
+
+        return context
+    def get_queryset(self):
+        queryset = cache.get('posts_list', None)
+
+        if not queryset:
+            queryset = super().get_queryset().annotate(comment_count=Count('comments')).prefetch_related('category')
+            cache.set('posts_list', queryset)
+
+        return queryset
 
 
 class PostView(DetailView):
@@ -37,6 +57,24 @@ class PostView(DetailView):
     template_name = 'news/postDetails.html'
     context_object_name = 'post'
     extra_context = {'menu': menu}
+
+    def get_object(self, *args, **kwargs):
+        obj = cache.get(f'post_{self.kwargs["pk"]}', None)
+
+        if not obj:
+            obj = super().get_object()
+            cache.set(f'post_{self.kwargs["pk"]}', obj)
+
+        return obj
+
+    def get_context_data(self, *args, **kwargs):
+        context = super().get_context_data(*args, **kwargs)
+        user = self.request.user
+        if user.is_authenticated:
+            subscribed_categories = Category.objects.filter(categorysubscriber__subscriber=user)
+            context['user_category'] = subscribed_categories
+
+        return context
 
 
 class PostUpdateView(PermissionRequiredMixin, LoginRequiredMixin, UpdateView):
@@ -80,6 +118,7 @@ class SearchPost(ListView):
     model = Post
     template_name = 'news/postSearch.html'
     context_object_name = 'search'
+    queryset = Post.objects.order_by('-publish_time').annotate(comment_count=Count('comments')).prefetch_related('category')
     paginate_by = 4
 
     def get_context_data(self, *, object_list=None, **kwargs):
@@ -87,11 +126,17 @@ class SearchPost(ListView):
         context['menu'] = menu
         context['filter'] = PostFilter(self.request.GET, queryset=self.get_queryset())
         context['filter_params'] = get_filter_params(self.request)
+        user = self.request.user
+        if user.is_authenticated:
+            subscribed_categories = Category.objects.filter(categorysubscriber__subscriber=user)
+            user_posts = Post.objects.filter(author__author_user=user)
+            context['user_category'] = subscribed_categories
+            context['user_posts'] = user_posts
 
         return context
 
     def get_queryset(self):
-        queryset = super().get_queryset()
+        queryset = super().get_queryset().annotate(comment_count=Count('comments')).prefetch_related('category')
         return PostFilter(self.request.GET, queryset=queryset).qs
 
 
@@ -202,3 +247,4 @@ def permission_denied_view(request, exception=None):
 def page_not_found_view(request, exception=None):
     context = {'message': str(exception), 'menu': menu}
     return render(request, '404.html', context=context, status=404)
+

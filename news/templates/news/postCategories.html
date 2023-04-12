@@ -1,7 +1,7 @@
 <span class="me-2">Категории:</span>
 {% for cat in post.category.all %}
     <div class="btn-group" role="group" aria-label="Категории">
-        {% if user.is_authenticated %}
+        {% if is_authenticated %}
             {% if user not in cat.subscribers.all %}
                 <form method="post" action="{% url 'subscribe' cat.pk %}" class="form-inline">
                     {% csrf_token %}

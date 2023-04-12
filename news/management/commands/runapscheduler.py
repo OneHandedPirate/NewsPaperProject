@@ -1,7 +1,7 @@
 import logging
+import sys
 
 from django.conf import settings
-
 from apscheduler.schedulers.blocking import BlockingScheduler
 from apscheduler.triggers.cron import CronTrigger
 from django.core.management.base import BaseCommand
@@ -10,6 +10,11 @@ from django_apscheduler.models import DjangoJobExecution
 from news.tasks import notify_subscribers_weekly
 
 logger = logging.getLogger(__name__)
+logger.setLevel(logging.INFO)
+handler = logging.StreamHandler(sys.stdout)
+handler.setLevel(logging.INFO)
+logger.addHandler(handler)
+
 
 def delete_old_job_executions(max_age=604_800):
     """This job deletes all apscheduler job executions older than `max_age` from the database."""
@@ -22,9 +27,8 @@ class Command(BaseCommand):
     def handle(self, *args, **options):
         scheduler = BlockingScheduler(timezone=settings.TIME_ZONE)
         scheduler.add_jobstore(DjangoJobStore(), "default")
-
         scheduler.add_job(
-            notify_subscribers_weekly(),
+            notify_subscribers_weekly,
             trigger=CronTrigger(
                 day_of_week="mon", hour="00", minute="00"
             ),
@@ -50,7 +54,7 @@ class Command(BaseCommand):
         try:
             logger.info("Starting scheduler...")
             scheduler.start()
-        except KeyboardInterrupt:
+        except (KeyboardInterrupt, SystemExit):
             logger.info("Stopping scheduler...")
             scheduler.shutdown()
             logger.info("Scheduler shut down successfully!")

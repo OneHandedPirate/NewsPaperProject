@@ -1,5 +1,6 @@
 {% extends 'news/default.html' %}
 {% load news.custom_filters %}
+{% load cache %}
 
 {% block title %}
     {{ post.title }}
@@ -14,7 +15,7 @@
             <h6>Автор: {{ post.author }}</h6>
         </div>
         <div class="d-flex col-8 text-end justify-content-end align-items-center">
-            {% if  request.user.is_authenticated and user|is_author and user|is_post_author:post %}
+            {% if  is_authenticated and is_author and post in user_posts %}
                 <div>
                     <a class="btn btn-secondary shadow" href="{% url 'post_update' post.pk %}">Редактировать</a>
                 </div>
@@ -40,8 +41,9 @@
         {% include 'news/postCategoriesAjax.html' %}
     </div>
 
+
     <!--Add Comment Button and Modal -->
-    {% if user.is_authenticated %}
+    {% if is_authenticated %}
         <button class="btn btn-secondary mb-4 mt-1 shadow" data-bs-toggle="modal" data-bs-target="#addComment">Добавить
             комментарий
         </button>

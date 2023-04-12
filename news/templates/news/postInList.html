@@ -1,5 +1,6 @@
 {% load news.custom_filters %}
 
+
 <div class="container-fluid col-sm-12 col-lg-10 rounded-5 shadow-lg p-4 my-4"
      style="border-radius: 15px">
     <div class="row justify-content-between">
@@ -13,7 +14,7 @@
             <hr>
             <div>
                 <span>Рейтинг: {{ post.rating }}</span> |
-                <span>Комментарии: {{ post.comments.all.count }}</span>
+                <span>Комментарии: {{ post.comment_count }}</span>
             </div>
         </div>
         <div class="text-end col-3 d-flex flex-column align-items-end justify-content-center overflow-hidden">
@@ -21,7 +22,7 @@
                 <a class="btn btn-secondary btn-block w-100 shadow" href="{% url 'post' post.pk %}">К посту</a>
             </div>
 
-            {% if request.user.is_authenticated and user|is_author and user|is_post_author:post %}
+            {% if is_authenticated and is_author and post in user_posts %}
                 <div class="w-100">
                     <a class="btn btn-secondary btn-block w-100 my-3 shadow" href="{% url 'post_update' post.pk %}">Редактировать</a>
                 </div>

@@ -1,6 +1,8 @@
 {% load static %}
 {% load socialaccount %}
 {% load news.custom_filters %}
+{% load cache %}
+
 
 <!DOCTYPE html>
 <html lang="en" class="h-100">
@@ -17,8 +19,12 @@
     <script src="https://kit.fontawesome.com/32d5dc53de.js" crossorigin="anonymous"></script>
 </head>
 <body class="d-flex flex-column h-100">
-<!-- Responsive navbar-->
-<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+
+{% with is_authenticated=request.user.is_authenticated is_author=user|is_author %}
+
+    <!-- Responsive navbar-->
+
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
     <div class="container">
         <a class="navbar-brand" href="{% url 'home' %}">NewsPaper</a>
         {% if menu %}
@@ -28,7 +34,7 @@
             </button>
             <div class="collapse navbar-collapse " id="navbarSupportedContent">
                 <ul class="navbar-nav ms-auto mb-2 mb-lg-0 text-center">
-                    {% if user.is_authenticated and not user|is_author %}
+                    {% if is_authenticated and not is_author %}
                         <li class="nav-item"><a class="nav-link" aria-current="page" data-bs-toggle="modal"
                                                 data-bs-target="#upgradeModal" style="cursor: pointer">Стать автором</a>
                         </li>
@@ -38,25 +44,25 @@
                             <li class="nav-item"><span class="nav-link active"
                                                        aria-current="page">{{ item.title }}</span></li>
                         {% elif item.title == 'Login' %}
-                            {% if not user.is_authenticated %}
+                            {% if not is_authenticated %}
                                 <li class="nav-item"><a class="nav-link" aria-current="page"
                                                         href="{% url 'account_login' %}">{{ item.title }}</a></li>
                             {% endif %}
                         {% elif item.title == 'Logout' %}
-                            {% if user.is_authenticated %}
+                            {% if is_authenticated %}
                                 <li class="nav-item"><a class="nav-link" aria-current="page" data-bs-toggle="modal"
                                                         data-bs-target="#logoutModal"
                                                         style="cursor: pointer">{{ item.title }}</a></li>
                             {% endif %}
                         {% elif item.title == 'Add post' %}
-                            {% if user.is_authenticated and user|is_author %}
+                            {% if is_authenticated and is_author %}
                                 <li class="nav-item"><a class="nav-link" aria-current="page"
                                                         href='{% url item.url_name %}'
                                                         title="Добавить пост (макс. - 3 в сутки)">{{ item.title }}</a>
                                 </li>
                             {% endif %}
                         {% elif item.title == 'Add category' %}
-                            {% if user.is_authenticated and user|is_author %}
+                            {% if is_authenticated and is_author %}
                                 <li class="nav-item"><a class="nav-link" aria-current="page" data-bs-toggle="modal"
                                                         data-bs-target="#addCatModal"
                                                         style="cursor: pointer">{{ item.title }}</a></li>
@@ -91,6 +97,7 @@
 {% endif %}
 
 <!-- Footer-->
+{% cache 3600 footer %}
 <footer class="bg-dark mt-auto">
     <div class="row text-light p-3 col-sm-12 col-lg-10 mx-auto">
         <div class="text-start col-8">
@@ -106,9 +113,10 @@
         </div>
     </div>
 </footer>
+{% endcache %}
 
 <!-- Logout Modal -->
-{% if user.is_authenticated %}
+{% if is_authenticated %}
     <div class="modal fade" id="logoutModal" tabindex="-1" role="dialog" aria-labelledby="logoutModalLabel"
          aria-hidden="true">
         <div class="modal-dialog" role="document">
@@ -132,13 +140,13 @@
     </div>
 {% endif %}
 
-{% if user.is_authenticated and user|is_author %}
+{% if is_authenticated and is_author %}
     {% include 'news/addCategoryModal.html' %}
 {% endif %}
 
 
 <!-- Upgrade Modal -->
-{% if user.is_authenticated and 'authors' not in user.groups.all %}
+{% if is_authenticated and not is_author %}
     <div class="modal fade" id="upgradeModal" tabindex="-1" role="dialog" aria-labelledby="upgradeModalLabel"
          aria-hidden="true">
         <div class="modal-dialog" role="document">
@@ -162,6 +170,7 @@
     </div>
 {% endif %}
 
+{% endwith %}
 <!-- JS-->
 <script>const csrfToken = `{{ csrf_token }}`</script>
 <script src="{% static 'news/js/bootstrap.bundle.min.js' %}"></script>

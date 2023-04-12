@@ -1,8 +1,9 @@
 from django.core.exceptions import PermissionDenied
-from django.db.models.signals import m2m_changed, pre_save
+from django.db.models.signals import m2m_changed, pre_save, post_save
 from django.dispatch import receiver
+from django.core.cache import cache
 
-from news.models import Post
+from news.models import Post, Category
 from news.utils import send_sub_emails
 from django.utils import timezone
 

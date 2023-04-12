@@ -1,9 +1,10 @@
 <div class="mx-auto mb-5" style="max-width: 600px">
-    <h3 class="mb-4" id="comments-header">{% if post.comments.all %}Комментарии:{% else %}Комментариев
+    {% with comments=post.comments.all %}
+    <h3 class="mb-4" id="comments-header">{% if comments %}Комментарии:{% else %}Комментариев
         нет{% endif %}</h3>
     <ul class="list-unstyled" id="comments-list">
-        {% if post.comments.all %}
-            {% for comment in post.comments.all %}
+        {% if comments %}
+            {% for comment in comments %}
                 <!--Comment-->
                 <li class="shadow rounded-3 mb-3">
                     <div class="row p-2">
@@ -50,4 +51,5 @@
             </div>
         </div>
     </div>
+    {% endwith %}
 </div>

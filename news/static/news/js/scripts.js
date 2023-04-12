@@ -1,11 +1,3 @@
-/*!
-* Start Bootstrap - Bare v5.0.7 (https://startbootstrap.com/template/bare)
-* Copyright 2013-2021 Start Bootstrap
-* Licensed under MIT (https://github.com/StartBootstrap/startbootstrap-bare/blob/master/LICENSE)
-*/
-// This file is intentionally blank
-// Use this file to add JavaScript to your project
-
 const commentsList = document.querySelector('#comments-list');
 const commentsHeader = document.querySelector('#comments-header');
 const confirmDeleteCommentButton = document.querySelector('#confirm-delete-comment');
@@ -35,7 +27,7 @@ function addComment(event) {
             if (data.success) {
                 const commentItem = `
                 <li class="shadow rounded-3 mb-3">
-                    <div class="row px-2">
+                    <div class="row p-2">
                         <span class="me-auto"><strong>Автор: </strong>${data.comment_user}</span>
                         <span class="ms-auto">${data.comment_publish_time}</span>
                     </div>
