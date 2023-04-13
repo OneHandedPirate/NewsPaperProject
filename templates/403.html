@@ -1,11 +1,11 @@
 {% extends 'news/default.html' %}
 
-{% block title %}Ошибка 403{% endblock %}
+{% block title %}403{% endblock %}
 {% block content %}
     <h1 class="mb-4">Ошибка доступа</h1>
     {% if message %}
         <p>{{ message|safe }}</p>
     {% else %}
-        <p>У вас недостаточно прав для совершения данного действия/просмотра этой страницы.</p>
+        <p>You don't have a permission to enter this page / perform this action</p>
     {% endif %}
 {% endblock %}

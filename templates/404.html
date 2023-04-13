@@ -1,11 +1,11 @@
 {% extends 'news/default.html' %}
 
-{% block title %}Ошибка 404{% endblock %}
+{% block title %}404{% endblock %}
 {% block content %}
     <h1 class="mb-3">Страница не найдена</h1>
     {% if message %}
         <p>{{ message }}</p>
     {% else %}
-        <p>Запрашиваемая страница не найдена/не существует</p>
+        <p>Requested page not found</p>
     {% endif %}
 {% endblock %}

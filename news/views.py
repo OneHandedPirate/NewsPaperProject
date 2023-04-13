@@ -188,7 +188,7 @@ def add_comment(request, pk):
 def delete_comment(request, pk):
     comment = get_object_or_404(Comment, pk=pk)
     if request.user != comment.user:
-        raise PermissionDenied('Удалять комментарии могут только их авторы (или админ)')
+        raise PermissionDenied('Only comments author have permission to delete it')
     comment.delete()
     return JsonResponse({'deleted': True})
 

@@ -35,7 +35,7 @@
                 <ul class="navbar-nav ms-auto mb-2 mb-lg-0 text-center">
                     {% if is_authenticated and not is_author %}
                         <li class="nav-item"><a class="nav-link" aria-current="page" data-bs-toggle="modal"
-                                                data-bs-target="#upgradeModal" style="cursor: pointer">Стать автором</a>
+                                                data-bs-target="#upgradeModal" style="cursor: pointer">Become author</a>
                         </li>
                     {% endif %}
                     {% for item in menu %}
@@ -57,7 +57,7 @@
                             {% if is_authenticated and is_author %}
                                 <li class="nav-item"><a class="nav-link" aria-current="page"
                                                         href='{% url item.url_name %}'
-                                                        title="Добавить пост (макс. - 3 в сутки)">{{ item.title }}</a>
+                                                        title="Add new post (daily limit: 3)">{{ item.title }}</a>
                                 </li>
                             {% endif %}
                         {% elif item.title == 'Add category' %}
@@ -125,13 +125,13 @@
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    <p>Вы точно хотите выйти?</p>
+                    <p>Are you sure?</p>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Остаться на сайте</button>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Stay logged in</button>
                     <form method="post" action="{% url 'account_logout' %}">
                         {% csrf_token %}
-                        <button type="submit" class="btn btn-primary">Выйти</button>
+                        <button type="submit" class="btn btn-primary">Logout</button>
                     </form>
                 </div>
             </div>
@@ -151,17 +151,17 @@
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="upgradeModalLabel">Стать автором</h5>
+                    <h5 class="modal-title" id="upgradeModalLabel">Become author</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    <p>Хотите стать автором?</p>
+                    <p>Do you really want to become author?</p>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Я передумал</button>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Nah</button>
                     <form method="post" action="{% url 'upgrade' %}">
                         {% csrf_token %}
-                        <button type="submit" class="btn btn-primary">Конечно хочу!</button>
+                        <button type="submit" class="btn btn-primary">Sure I do!</button>
                     </form>
                 </div>
             </div>

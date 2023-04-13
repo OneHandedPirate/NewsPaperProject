@@ -10,23 +10,23 @@ class PostForm(forms.ModelForm):
         model = Post
         fields = ['type', 'category', 'title', 'text']
         labels = {
-            'type': 'Тип поста',
-            'category': 'Категории',
-            'title': 'Название',
-            'text': 'Текст'
+            'type': 'Post type',
+            'category': 'Categories',
+            'title': 'Title',
+            'text': 'Text'
         }
 
         widgets = {
             'type': forms.Select(attrs={'class': 'form-select form-select-sm'}),
             'title': forms.TextInput(attrs={'class': 'form-control',
-                                            'placeholder': 'Введите название'}),
+                                            'placeholder': 'Enter title...'}),
             'text': forms.Textarea(attrs={'class': 'form-control',
-                                          'placeholder': 'Введите текст'}),
+                                          'placeholder': 'Enter text...'}),
             'category': forms.SelectMultiple(attrs={'class': 'form-control', 'size': 2}),
         }
 
 class CustomSignupForm(SignupForm):
-    become_author = forms.BooleanField(label='Стать автором', required=False,
+    become_author = forms.BooleanField(label='Become author', required=False,
                                        widget=forms.CheckboxInput(attrs={'class': 'form-check-input', 'type': 'checkbox'}))
 
     def save(self, request):

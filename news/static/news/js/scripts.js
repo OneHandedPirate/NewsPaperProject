@@ -28,7 +28,7 @@ function addComment(event) {
                 const commentItem = `
                 <li class="shadow rounded-3 mb-3">
                     <div class="row p-2">
-                        <span class="me-auto"><strong>Автор: </strong>${data.comment_user}</span>
+                        <span class="me-auto"><strong>Author: </strong>${data.comment_user}</span>
                         <span class="ms-auto">${data.comment_publish_time}</span>
                     </div>
                     <hr class="my-0 mx-auto" style="width: 95%">
@@ -44,13 +44,13 @@ function addComment(event) {
                         data-delete-url="${data.comment_delete_url}"
                         onclick="deleteComment(event)"
                         >
-                            Удалить
+                            Delete
                             </button>
                 </li>
                 `;
                 commentsList.insertAdjacentHTML('beforeend', commentItem);
                 form.reset();
-                commentsHeader.textContent = 'Комментарии:';
+                commentsHeader.textContent = 'Comments:';
             } else {
                 const errors = data.errors;
                 const errorList = document.getElementById('error-list');
@@ -86,7 +86,7 @@ function deleteComment(event) {
                         confirmDeleteCommentButton.removeEventListener('click',
                             ConfirmDeleteCommentClick);
                         if (commentsList.innerText.trim() === '') {
-                            commentsHeader.textContent = 'Комментариев нет';
+                            commentsHeader.textContent = '';
                         }
                     }
                 })
@@ -111,7 +111,7 @@ function subscribeCategory(event) {
                 let sameButtons = document.querySelectorAll(`button[data-url="${url}"]`)
                 sameButtons.forEach((button) => {
                     button.classList.replace('btn-outline-secondary', 'btn-secondary');
-                    button.title = "Нажмите, чтобы отписаться"
+                    button.title = "Press to unsubscribe"
                     button.dataset.url = data.url;
                     button.onclick = unsubscribeCategory
                 })
@@ -138,7 +138,7 @@ function unsubscribeCategory(event) {
                 let sameButtons = document.querySelectorAll(`button[data-url="${url}"]`)
                 sameButtons.forEach((button) => {
                     button.classList.replace('btn-secondary', 'btn-outline-secondary');
-                    button.title = "Нажмите, чтобы подписаться на категорию"
+                    button.title = "Press to subscribe"
                     button.dataset.url = data.url;
                     button.onclick = subscribeCategory
                 })

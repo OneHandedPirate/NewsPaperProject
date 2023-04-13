@@ -1,10 +1,10 @@
 {% extends "news/default.html" %}
 {% load widget_tweaks %}
 
-{% block title %}Register{% endblock %}
+{% block title %}Sign up{% endblock %}
 
 {% block content %}
-    <h1 class="mb-5">Регистрация</h1>
+    <h1 class="mb-5">Sign up form</h1>
     <div class="container d-flex flex-column">
         <form method="post" action="{% url 'account_signup' %}">
             {% csrf_token %}
@@ -27,11 +27,11 @@
                     </ul>
                 </div>
             {% endif %}
-            <button class="btn btn-secondary mt-3 shadow" type="submit">Зарегистрироваться</button>
+            <button class="btn btn-secondary mt-3 shadow" type="submit">Sign up</button>
         </form>
         <hr class="align-self-center" style="width: 450px;">
     </div>
 
-   <p>Уже зарегистрированы? </p>
-   <a class="btn btn-secondary shadow" href="{% url 'account_login' %}">Войти</a>
+   <p>Already signed up?</p>
+   <a class="btn btn-secondary shadow" href="{% url 'account_login' %}">Login</a>
 {% endblock %}

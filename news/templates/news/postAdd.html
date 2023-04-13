@@ -1,14 +1,14 @@
 {% extends 'news/default.html' %}
 
-{% block title %}{% if 'edit' in request.path %}Редактирование{% else %}Добавление{% endif %} поста{% endblock %}
+{% block title %}{% if 'edit' in request.path %}Edit{% else %}Add{% endif %} post{% endblock %}
 
 {% block content %}
-    <h1>{% if 'edit' in request.path %}Редактирование{% else %}Добавление{% endif %} поста</h1>
+    <h1>{% if 'edit' in request.path %}Edit{% else %}Add{% endif %} post</h1>
     <form method="post" class="mt-4">
         {% csrf_token %}
         <div class="row justify-content-center">
             {% for i in form %}
-                {% if i.label == 'Текст' or i.label == 'Название' %}
+                {% if i.label == 'Text' or i.label == 'Title' %}
                     <div class="col-md-9 col-sm-10 col-12 mt-4 align-content-center">
                         {{ i }}
                     </div>
@@ -20,7 +20,7 @@
                 {% endif %}
             {% endfor %}
         </div>
-        <button type="submit" class="btn btn-secondary my-4">{% if 'edit' in request.path %}Отредактировать{% else %}
-            Добавить{% endif %}</button>
+        <button type="submit" class="btn btn-secondary my-4">{% if 'edit' in request.path %}Edit{% else %}
+            Add{% endif %}</button>
     </form>
 {% endblock %}

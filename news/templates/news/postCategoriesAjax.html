@@ -1,12 +1,12 @@
-<div class="btn-group d-flex flex-wrap" role="group" aria-label="Категории">
-    <span class="me-2 my-auto">Категории:</span>
+<div class="btn-group d-flex flex-wrap" role="group" aria-label="Categories">
+    <span class="me-2 my-auto">Categories:</span>
     {% for cat in post.category.all %}
         {% if is_authenticated %}
             {% if cat not in user_category %}
                 <button
                         class="btn-sm btn-outline-secondary m-1 shadow"
                         data-url="{% url 'subscribe' cat.pk %}"
-                        title="Нажмите, чтобы подписаться на категорию"
+                        title="Press to subscribe"
                         onclick="subscribeCategory(event)"
                 >
                     {{ cat.name }}
@@ -14,7 +14,7 @@
             {% else %}
                 <button
                         class="btn-sm btn-secondary m-1 shadow"
-                        title="Нажмите, чтобы отписаться"
+                        title="Press to unsubscribe"
                         data-url="{% url 'unsubscribe' cat.pk %}"
                         onclick="unsubscribeCategory(event)"
                 >
@@ -23,7 +23,7 @@
             {% endif %}
         {% else %}
             <span class="btn-sm btn-secondary m-1 shadow"
-                  title="Войдите, чтобы подписаться на категорию">{{ cat.name }}</span>
+                  title="Login to subscribe">{{ cat.name }}</span>
         {% endif %}
     {% endfor %}
 </div>

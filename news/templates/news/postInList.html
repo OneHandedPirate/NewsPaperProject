@@ -6,15 +6,14 @@
     <div class="row justify-content-between">
         <div class="text-start col-9 overflow-auto">
             <h2>{{ post.title | censor }}</h2>
-            <p class="fst-italic">Дата: {{ post.publish_time|date:'d.m.Y' }}</p>
+            <p class="fst-italic">Date: {{ post.publish_time|date:'d.m.Y' }}</p>
             <p class="mt-4">{{ post.text | truncatewords:10 | censor }}</p>
             <div class="mt-4">
                 {% include 'news/postCategoriesAjax.html' %}
             </div>
             <hr>
             <div>
-                <span>Рейтинг: {{ post.rating }}</span> |
-                <span>Комментарии: {{ post.comment_count }}</span>
+                <span>Comments: {{ post.comment_count }}</span>
             </div>
         </div>
         <div class="text-end col-3 d-flex flex-column align-items-end justify-content-center overflow-hidden">
