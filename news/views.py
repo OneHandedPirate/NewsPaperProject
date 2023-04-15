@@ -1,34 +1,35 @@
 from django.contrib.auth.decorators import login_required, permission_required
 from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
-from django.core.exceptions import PermissionDenied
+from django.core.exceptions import PermissionDenied, ObjectDoesNotExist
 from django.http import JsonResponse
 from django.shortcuts import redirect, render, get_object_or_404
 from django.views.decorators.http import require_POST
-from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
+from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView, FormView
 from django.utils import timezone
 from django.db.models import Count
 
+
 from .models import *
 from .filter import PostFilter
-from .utils import get_filter_params
+from .utils import get_filter_params, is_url_valid, send_contact_email
 from .forms import *
-
 
 menu = [{'title': 'Home', 'url_name': 'home'},
         {'title': 'Search', 'url_name': 'search'},
         {'title': 'Add post', 'url_name': 'add'},
         {'title': 'Add category', 'url_name': 'add_category'},
         {'title': 'About Us', 'url_name': ''},
-        {'title': 'Contact Us', 'url_name': ''},
+        {'title': 'Contact Us', 'url_name': 'contactus'},
         {'title': 'Login', 'url_name': 'account_login'},
-        {'title': 'Logout', 'url_name': 'account_logout'},]
+        {'title': 'Logout', 'url_name': 'account_logout'}, ]
 
 
 class News(ListView):
     model = Post
     template_name = 'news/postList.html'
     context_object_name = 'news'
-    queryset = Post.objects.order_by('-publish_time').annotate(comment_count=Count('comments')).prefetch_related('category')
+    queryset = Post.objects.order_by('-publish_time').annotate(comment_count=Count('comments')).prefetch_related(
+        'category').select_related("author__author_user")
     extra_context = {'menu': menu}
     paginate_by = 10
 
@@ -38,15 +39,15 @@ class News(ListView):
         if user.is_authenticated:
             subscribed_categories = Category.objects.filter(categorysubscriber__subscriber=user)
             context['user_category'] = subscribed_categories
-            user_posts = Post.objects.filter(author__author_user=user)
-            context['user_posts'] = user_posts
 
         return context
+
     def get_queryset(self):
         queryset = cache.get('posts_list', None)
 
         if not queryset:
-            queryset = super().get_queryset().annotate(comment_count=Count('comments')).prefetch_related('category')
+            queryset = super().get_queryset().annotate(comment_count=Count('comments')).\
+                prefetch_related('category').select_related("author__author_user")
             cache.set('posts_list', queryset)
 
         return queryset
@@ -60,9 +61,8 @@ class PostView(DetailView):
 
     def get_object(self, *args, **kwargs):
         obj = cache.get(f'post_{self.kwargs["pk"]}', None)
-
         if not obj:
-            obj = super().get_object()
+            obj = super().get_object(Post.objects.select_related())
             cache.set(f'post_{self.kwargs["pk"]}', obj)
 
         return obj
@@ -73,8 +73,6 @@ class PostView(DetailView):
         if user.is_authenticated:
             subscribed_categories = Category.objects.filter(categorysubscriber__subscriber=user)
             context['user_category'] = subscribed_categories
-            user_posts = Post.objects.filter(author__author_user=user)
-            context['user_posts'] = user_posts
 
         return context
 
@@ -102,25 +100,29 @@ class PostDeleteView(PermissionRequiredMixin, LoginRequiredMixin, DeleteView):
 
     def dispatch(self, request, *args, **kwargs):
         post = self.get_object()
-        #Проверка является ли user автором поста
+        # Проверка является ли user автором поста
         if post.author.author_user != request.user:
             raise PermissionDenied
         return super().dispatch(request, *args, **kwargs)
 
-    def get_success_url(self):
-        #Делаем редирект на ту же страницу из которой было вызвано представление
-        referer = self.request.META.get('HTTP_REFERER')
-        if referer and referer != self.request.build_absolute_uri():
-            return referer
-
-        return super().get_success_url()
+    # def get_success_url(self):
+    #     cache.delete(f'post_{self.kwargs["pk"]}')
+    #     # Делаем редирект на ту же страницу из которой было вызвано представление
+    #     referer = self.request.META.get('HTTP_REFERER')
+    #     print(referer)
+    #     if referer and referer != self.request.build_absolute_uri() and is_url_valid(referer):
+    #         return referer
+    #
+    #     return super().get_success_url()
 
 
 class SearchPost(ListView):
     model = Post
     template_name = 'news/postSearch.html'
     context_object_name = 'search'
-    queryset = Post.objects.order_by('-publish_time').annotate(comment_count=Count('comments')).prefetch_related('category')
+    queryset = Post.objects.order_by('-publish_time').annotate(
+        comment_count=Count('comments')).prefetch_related(
+        'category').select_related("author__author_user")
     paginate_by = 4
 
     def get_context_data(self, *, object_list=None, **kwargs):
@@ -130,15 +132,16 @@ class SearchPost(ListView):
         context['filter_params'] = get_filter_params(self.request)
         user = self.request.user
         if user.is_authenticated:
-            subscribed_categories = Category.objects.filter(categorysubscriber__subscriber=user)
-            user_posts = Post.objects.filter(author__author_user=user)
+            subscribed_categories = Category.objects.filter(
+                categorysubscriber__subscriber=user)
             context['user_category'] = subscribed_categories
-            context['user_posts'] = user_posts
 
         return context
 
     def get_queryset(self):
-        queryset = super().get_queryset().annotate(comment_count=Count('comments')).prefetch_related('category')
+        queryset = super().get_queryset().annotate(
+            comment_count=Count('comments')).prefetch_related(
+            'category').select_related("author__author_user")
         return PostFilter(self.request.GET, queryset=queryset).qs
 
 
@@ -158,10 +161,25 @@ class AddPost(PermissionRequiredMixin, LoginRequiredMixin, CreateView):
 
         return response
 
+
+class ContactView(LoginRequiredMixin, FormView):
+    form_class = ContactForm
+    template_name = 'news/contact.html'
+    extra_context = {'menu': menu}
+    success_url = reverse_lazy('thanks')
+
+    def form_valid(self, form):
+        if self.request.method == 'POST':
+            send_contact_email(self.request.user, self.request.user.email, form)
+        return super().form_valid(form)
+
+
+
 @login_required
 @require_POST
 def add_comment(request, pk):
     post = get_object_or_404(Post, pk=pk)
+    cache.delete('posts_list')
     form = CommentForm(request.POST)
     if form.is_valid():
         comment = form.save(commit=False)
@@ -172,7 +190,8 @@ def add_comment(request, pk):
             'success': True,
             'comment_id': comment.pk,
             'comment_text': comment.text,
-            'comment_publish_time': comment.publish_time.astimezone(timezone.get_default_timezone()).strftime('%d.%m.%Y %H:%M:%S'),
+            'comment_publish_time': comment.publish_time.astimezone(
+                timezone.get_default_timezone()).strftime('%d.%m.%Y %H:%M:%S'),
             'comment_user': comment.user.username,
             'comment_delete_url': comment.get_delete_url()
         }
@@ -183,14 +202,17 @@ def add_comment(request, pk):
         }
     return JsonResponse(data)
 
+
 @login_required
 @require_POST
 def delete_comment(request, pk):
     comment = get_object_or_404(Comment, pk=pk)
+    cache.delete('posts_list')
     if request.user != comment.user:
         raise PermissionDenied('Only comments author have permission to delete it')
     comment.delete()
     return JsonResponse({'deleted': True})
+
 
 @login_required
 def upgrade_to_author(request):
@@ -198,7 +220,7 @@ def upgrade_to_author(request):
     common_group = Group.objects.get(name='common')
     authors_group = Group.objects.get(name='authors')
 
-    #Если юзер не в группе common (например, он зашел через Google), то добавляем его сразу в обе группы
+    # Если юзер не в группе common (например, он зашел через Google), то добавляем его сразу в обе группы
     if not request.user.groups.filter(name='common').exists():
         common_group.user_set.add(user)
     if not request.user.groups.filter(name='authors').exists():
@@ -206,6 +228,7 @@ def upgrade_to_author(request):
         authors_group.user_set.add(user)
 
     return redirect('home')
+
 
 @login_required
 @require_POST
@@ -219,20 +242,22 @@ def remove_subscriber(request, pk):
     }
     return JsonResponse(data)
 
+
 @login_required
 @require_POST
 def add_subscriber(request, pk):
     category = Category.objects.get(pk=pk)
     user = request.user
-    #Так как в промежуточной модели нет полей кроме category и user можно проигнорировать это предупреждение.
-    #Если бы поля были, тогда нужно было передавать эти поля и их значения в through_defaults в дополнении к category и user через менеджер модели CategorySubscriber
-    #category.subscribers.through.objects.create(user=user, category=category, **through_defaults)
+    # Так как в промежуточной модели нет полей кроме category и user можно проигнорировать это предупреждение.
+    # Если бы поля были, тогда нужно было передавать эти поля и их значения в through_defaults в дополнении к category и user через менеджер модели CategorySubscriber
+    # category.subscribers.through.objects.create(user=user, category=category, **through_defaults)
     category.subscribers.add(user)
     data = {
         'success': True,
         'url': category.unsubscribe()
     }
     return JsonResponse(data)
+
 
 @permission_required('news.add_category', raise_exception=True)
 @login_required
@@ -242,11 +267,17 @@ def add_category(request):
     category = Category.objects.create(name=name)
     return redirect(request.META.get('HTTP_REFERER', 'home'))
 
+
+def thanks(request):
+    return render(request, 'news/thanks.html', context={'menu': menu})
+
 def permission_denied_view(request, exception=None):
     context = {'message': str(exception), 'menu': menu}
     return render(request, '403.html', context=context, status=403)
 
+
 def page_not_found_view(request, exception=None):
     context = {'message': str(exception), 'menu': menu}
     return render(request, '404.html', context=context, status=404)
+
 
