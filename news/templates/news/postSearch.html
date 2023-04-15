@@ -6,17 +6,16 @@
 {% block title %}Search{% endblock %}
 
 {% block content %}
-    <h1>Search for:</h1>
+    <h1 class="my-3 my-lg-5">Search for:</h1>
     <form method="get" class="mt-4">
-        <div class='row'>
+        <div class='row col-10 mx-auto'>
             {% for f in filter.form %}
                 <div class="col-4">{{ f|add_class:'shadow' }}</div>
             {% endfor %}
         </div>
         <div class="d-grid gap-2 col-3 mx-auto">
-            <button type="submit" class="btn btn-secondary mt-3 shadow">Search</button>
+            <button type="submit" class="btn btn-secondary my-4 shadow">Search</button>
         </div>
-        <hr>
     </form>
     {% for post in search %}
         {% include 'news/postInList.html' %}

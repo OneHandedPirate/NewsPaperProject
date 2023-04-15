@@ -4,17 +4,8 @@ from django.db import models
 from django.contrib.auth.models import User
 from django.core.cache import cache
 
+from .utils import Attitude
 
-class Attitude:
-    '''Миксин-класс для моделей с полем rating'''
-
-    def like(self):
-        self.rating += 1
-        self.save()
-
-    def dislike(self):
-        self.rating -= 1
-        self.save()
 
 class Author(models.Model):
     author_user = models.ForeignKey(User, on_delete=models.CASCADE)
@@ -50,7 +41,7 @@ class Category(models.Model):
 class Post(models.Model, Attitude):
     author = models.ForeignKey(Author, on_delete=models.CASCADE)
     type = models.CharField(max_length=1,
-                            choices=[('N', 'Новость'), ('A', 'Статья')],
+                            choices=[('N', 'News'), ('A', 'Article')],
                             default='A')
     publish_time = models.DateTimeField(auto_now_add=True)
     category = models.ManyToManyField(Category, through='PostCategory')
@@ -99,4 +90,3 @@ class Comment(models.Model, Attitude):
 
     def get_delete_url(self):
         return reverse_lazy('delete_comment', kwargs={'pk': self.pk})
-

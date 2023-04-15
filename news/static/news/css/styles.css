@@ -11302,3 +11302,38 @@ a.fa-brands {
   color: whitesmoke;
 }
 
+/*Dropdown with checkbox*/
+.multi-select {
+    display: none;
+}
+
+.dropdown {
+    position: relative;
+}
+
+.trigger {
+    display: block;
+    padding: 10px;
+    background-color: #eee;
+    border: 1px solid #ccc;
+    cursor: pointer;
+}
+
+.dropdown.open .multi-select {
+    display: block;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    width: 100%;
+    z-index: 1;
+    background-color: #fff;
+    border: 1px solid #ccc;
+    border-top: none;
+    overflow: auto;
+    max-height: 200px;
+}
+
+.dropdown.open .trigger {
+    border-bottom: none;
+}
+

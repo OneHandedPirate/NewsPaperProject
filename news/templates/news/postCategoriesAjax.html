@@ -1,5 +1,5 @@
 <div class="btn-group d-flex flex-wrap" role="group" aria-label="Categories">
-    <span class="me-2 my-auto">Categories:</span>
+    <span class="me-2 my-auto"><strong>Categories:</strong></span>
     {% for cat in post.category.all %}
         {% if is_authenticated %}
             {% if cat not in user_category %}

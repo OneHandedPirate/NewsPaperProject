@@ -12,14 +12,10 @@
     <div class="row">
         <div class="col-4 text-start">
             <span>Published: {{ post.publish_time | date:'d.m.Y f' }}</span>
-            {% if post not in user_posts %}
                 <h6>Author: {{ post.author }}</h6>
-            {% else %}
-                <h6>{{ user }}</h6>
-            {% endif %}
         </div>
         <div class="d-flex col-8 text-end justify-content-end align-items-center">
-            {% if  is_authenticated and is_author and post in user_posts %}
+            {% if  is_authenticated and is_author and post.author.author_user == user %}
                 <div>
                     <a class="btn btn-secondary shadow" href="{% url 'post_update' post.pk %}">Edit</a>
                 </div>
@@ -56,8 +52,7 @@
             <div class="modal-dialog">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <label for="commentText" class="modal-title fs-5" id="addCommentModalLabel">Добавление
-                            комментария</label>
+                        <label for="commentText" class="modal-title fs-5" id="addCommentModalLabel">Add comment</label>
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <form method="post" action="{% url 'add_comment' post.pk %}" id="addCommentForm">
@@ -67,7 +62,7 @@
                                       style="min-height: 150px;" required
                                       placeholder="Enter text..."></textarea>
                         </div>
-                        <div class="modal-footer">
+                        <div class="modal-footer justify-content-center">
                             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
                             <button type="submit" class="btn btn-primary" id="confirm-add" data-bs-dismiss="modal">
                                 Add
