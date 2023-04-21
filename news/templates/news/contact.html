@@ -4,7 +4,7 @@
 {% block title %}Contact Us{% endblock %}
 
 {% block content %}
-    <h1 class="my-3 my-lg-5">Feedback Form</h1>
+    <h1 class="my-3 my-lg-4">Feedback Form</h1>
     <form method="post" action="{% url 'contactus' %}" class="mx-auto" style="max-width: 600px">
         {% for field in form %}
             {{ field|add_class:"form-control shadow mb-4"}}

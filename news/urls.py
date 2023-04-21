@@ -1,4 +1,5 @@
 from django.urls import path
+from django.views.decorators.cache import cache_page
 
 from .views import News, SearchPost, PostUpdateView, AddPost, \
     PostView, PostDeleteView, ContactView, upgrade_to_author, add_subscriber, \
@@ -18,5 +19,5 @@ urlpatterns = [
     path('<int:pk>/add_comment/', add_comment, name='add_comment'),
     path('delete_comment/<int:pk>/', delete_comment, name='delete_comment'),
     path('contactus/', ContactView.as_view(), name='contactus'),
-    path('thanks/', thanks, name='thanks'),
+    path('thanks/', cache_page(600)(thanks), name='thanks'),
 ]

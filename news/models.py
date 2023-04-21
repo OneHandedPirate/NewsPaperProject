@@ -59,13 +59,14 @@ class Post(models.Model, Attitude):
         return reverse_lazy('post', kwargs={'pk': self.id})
 
     def save(self, *args, **kwargs):
-        super().save(*args, **kwargs)
         cache.delete(f'post_{self.pk}')
         cache.delete('posts_list')
+        super().save(*args, **kwargs)
 
     def delete(self, *args, **kwargs):
-        super().delete(*args, **kwargs)
+        cache.delete(f'post_{self.pk}')
         cache.delete('posts_list')
+        super().delete(*args, **kwargs)
 
 
 class PostCategory(models.Model):

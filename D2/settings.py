@@ -51,8 +51,7 @@ INSTALLED_APPS = [
     'allauth.socialaccount.providers.google',
     'widget_tweaks',
     'django_apscheduler',
-
-    'debug_toolbar'
+    'debug_toolbar',
 ]
 
 SITE_ID = 1
@@ -189,3 +188,122 @@ CACHES = {
 INTERNAL_IPS = [
     '127.0.0.1',
 ]
+
+ADMINS = [
+    ('onehandedpirate', EMAIL)
+]
+
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'formatters': {
+        'console_debug': {
+            'format': '[%(asctime)s] %(levelname)s %(message)s'
+        },
+        'console_warning': {
+            'format': '%(pathname)s'
+        },
+        'console_error': {
+            'format': '%(exc_info)s'
+        },
+        'general_info_security': {
+            'format': '[%(asctime)s] %(levelname)s %(module)s %(message)s'
+        },
+        'errors_error': {
+            'format': '[%(asctime)s] %(levelname)s %(message)s %(pathname)s\n%(exc_info)s'
+        },
+        'admin_email': {
+            'format': '[%(asctime)s] %(levelname)s %(message)s %(pathname)s\n'
+        }
+    },
+    'filters': {
+        'require_debug_true': {
+            '()': 'django.utils.log.RequireDebugTrue',
+        },
+        'require_debug_false': {
+            '()': 'django.utils.log.RequireDebugFalse'
+        }
+    },
+    'handlers': {
+        'console_debug_handler': {
+            'level': 'DEBUG',
+            'filters': ['require_debug_true'],
+            'class': 'logging.StreamHandler',
+            'formatter': 'console_debug'
+        },
+        'console_warning_handler': {
+            'level': 'WARNING',
+            'filters': ['require_debug_true'],
+            'class': 'logging.StreamHandler',
+            'formatter': 'console_warning'
+        },
+        'console_errors_handler': {
+            'level': 'ERROR',
+            'filters': ['require_debug_true'],
+            'class': 'logging.StreamHandler',
+            'formatter': 'console_error'
+        },
+        'general_handler': {
+            'level': 'INFO',
+            'filters': ['require_debug_false'],
+            'class': 'logging.FileHandler',
+            'filename': BASE_DIR / 'logs/general.log',
+            'formatter': 'general_info_security'
+        },
+        'errors_handler': {
+            'level': 'ERROR',
+            'class': 'logging.FileHandler',
+            'filename': BASE_DIR / 'logs/errors.log',
+            'formatter': 'errors_error'
+        },
+        'security_handler': {
+            'level': 'DEBUG',
+            'class': 'logging.FileHandler',
+            'filename': BASE_DIR / 'logs/security.log',
+            'formatter': 'general_info_security'
+        },
+        'email_handler': {
+            'level': 'ERROR',
+            'class': 'django.utils.log.AdminEmailHandler',
+            'filters': ['require_debug_false'],
+            'formatter': 'admin_email'
+        }
+    },
+    'loggers': {
+        'django': {
+            'handlers': [
+                'console_debug_handler',
+                'console_warning_handler',
+                'console_errors_handler',
+                'general_handler',
+            ],
+            'propagate': True
+        },
+        'django.request': {
+            'handlers': [
+                'errors_handler',
+                'email_handler'
+            ],
+            'propagate': True
+        },
+        'django.server': {
+            'handlers': [
+                'errors_handler',
+                'email_handler'
+            ],
+            'propagate': True
+        },
+        'django.template': {
+            'handlers': ['errors_handler'],
+            'propagate': True
+        },
+        'django.db_backends': {
+            'handlers': ['errors_handler'],
+            'propagate': True
+        },
+        'django.security': {
+            'handlers': ['security_handler'],
+            'propagate': True
+        }
+    }
+}
