@@ -18,3 +18,13 @@
 [2023-04-19 19:29:57,345] WARNING basehttp "GET /news/564564564/ HTTP/1.1" 404 8033
 [2023-04-19 19:30:04,006] INFO basehttp "GET /news/ HTTP/1.1" 200 29039
 [2023-04-19 19:30:31,929] INFO autoreload C:\Users\Plagueis\Desktop\SkillFactory\D2\D2\settings.py changed, reloading.
+[2023-04-24 12:01:21,528] INFO autoreload Watching for file changes with StatReloader
+[2023-04-24 12:01:23,955] INFO basehttp "GET /news/ HTTP/1.1" 200 29039
+[2023-04-24 12:01:24,489] WARNING log Not Found: /static/news/assets/favicon.ico
+[2023-04-24 12:01:24,489] WARNING basehttp "GET /static/news/assets/favicon.ico HTTP/1.1" 404 8538
+[2023-04-24 12:01:28,194] INFO basehttp "GET /news/212/ HTTP/1.1" 200 16161
+[2023-04-24 12:01:29,381] INFO basehttp "GET /news/ HTTP/1.1" 200 29039
+[2023-04-24 12:01:39,417] INFO basehttp "GET /news/6564564 HTTP/1.1" 301 0
+[2023-04-24 12:01:39,435] WARNING log Not Found: /news/6564564/
+[2023-04-24 12:01:39,436] WARNING basehttp "GET /news/6564564/ HTTP/1.1" 404 8033
+[2023-04-24 12:02:17,063] INFO autoreload C:\Users\Plagueis\Desktop\SkillFactory\D2\D2\settings.py changed, reloading.
