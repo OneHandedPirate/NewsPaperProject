@@ -29,7 +29,7 @@ class News(ListView):
     template_name = 'news/postList.html'
     context_object_name = 'news'
     queryset = Post.objects.order_by('-publish_time').annotate(comment_count=Count('comments')).prefetch_related(
-        'category').select_related("author__author_user")
+        'category').select_related("author__author_user").prefetch_related('voted').annotate(voted_count=Count('voted'))
     extra_context = {'menu': menu}
     paginate_by = 10
 
@@ -38,19 +38,22 @@ class News(ListView):
         user = self.request.user
         if user.is_authenticated:
             subscribed_categories = Category.objects.filter(categorysubscriber__subscriber=user)
+            voted_posts = Post.objects.filter(voted=user)
             context['user_category'] = subscribed_categories
+            context['voted_posts'] = voted_posts
 
         return context
 
-    def get_queryset(self):
-        queryset = cache.get('posts_list', None)
-
-        if not queryset:
-            queryset = super().get_queryset().annotate(comment_count=Count('comments')).\
-                prefetch_related('category').select_related("author__author_user")
-            cache.set('posts_list', queryset)
-
-        return queryset
+    # def get_queryset(self):
+    #     queryset = cache.get('posts_list', None)
+    #
+    #     if not queryset:
+    #         queryset = super().get_queryset().annotate(comment_count=Count('comments')).\
+    #             prefetch_related('category').select_related("author__author_user")\
+    #             .prefetch_related('voted').annotate(voted_count=Count('voted'))
+    #         cache.set('posts_list', queryset)
+    #
+    #     return queryset
 
 
 class PostView(DetailView):
@@ -134,14 +137,17 @@ class SearchPost(ListView):
         if user.is_authenticated:
             subscribed_categories = Category.objects.filter(
                 categorysubscriber__subscriber=user)
+            voted_posts = Post.objects.filter(voted=user)
             context['user_category'] = subscribed_categories
+            context['voted_posts'] = voted_posts
 
         return context
 
     def get_queryset(self):
         queryset = super().get_queryset().annotate(
             comment_count=Count('comments')).prefetch_related(
-            'category').select_related("author__author_user")
+            'category').select_related("author__author_user")\
+            .prefetch_related('voted').annotate(voted_count=Count('voted'))
         return PostFilter(self.request.GET, queryset=queryset).qs
 
 
@@ -266,6 +272,16 @@ def add_category(request):
     name = request.POST.get('name')
     category = Category.objects.create(name=name)
     return redirect(request.META.get('HTTP_REFERER', 'home'))
+
+
+@login_required
+@require_POST
+def vote(request, pk):
+    user = request.user
+    postvote = PostVote.objects.filter(user_id=user, post_id=Post.objects.get(pk=pk))
+    if not postvote:
+        PostVote.objects.create(user_id=user, post_id=Post.objects.get(pk=pk))
+    return JsonResponse({"success": True})
 
 
 def thanks(request):

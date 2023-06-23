@@ -48,6 +48,7 @@ class Post(models.Model, Attitude):
     title = models.CharField(max_length=150)
     text = models.TextField()
     rating = models.IntegerField(default=0)
+    voted = models.ManyToManyField(User, through='PostVote')
 
     def preview(self):
         return f'{self.text[:124]}...'
@@ -91,3 +92,14 @@ class Comment(models.Model, Attitude):
 
     def get_delete_url(self):
         return reverse_lazy('delete_comment', kwargs={'pk': self.pk})
+
+
+class PostVote(models.Model):
+    user_id = models.ForeignKey(User, on_delete=models.CASCADE)
+    post_id = models.ForeignKey(Post, on_delete=models.CASCADE)
+
+    class Meta:
+        unique_together = ('user_id', 'post_id')
+
+    def __str__(self):
+        return f'{self.user_id} - {self.post_id}'

@@ -148,5 +148,27 @@ function unsubscribeCategory(event) {
 }
 
 
+function votePost (event) {
+    let button = event.target;
+    let url = button.dataset.url;
+    fetch(url, {
+        method: 'POST',
+        headers: {
+            'X-CSRFToken': csrfToken,
+        }
+    })
+        .then(response => response.json())
+        .then((data) => {
+            if (data.success) {
+                let voteCount = button.parentNode.firstElementChild.lastElementChild.lastElementChild.textContent;
+                button.parentNode.firstElementChild.lastElementChild.lastElementChild.textContent = +(voteCount) + 1;
+                button.remove();
+            }
+        })
+        .catch(errors => console.log(errors))
+}
+
+
+
 
 
