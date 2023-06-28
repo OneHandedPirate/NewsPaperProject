@@ -172,13 +172,6 @@ EMAIL_PORT = environ.EMAIL_PORT
 EMAIL_USE_TLS = environ.EMAIL_USE_TLS
 DEFAULT_FROM_EMAIL = environ.EMAIL_HOST_USER
 
-# EMAIL_HOST = 'smtp.gmail.com'
-# EMAIL_HOST_USER = 'newspaperprojectdjango@gmail.com'
-# EMAIL_HOST_PASSWORD = 'qygameoefsnzicug'
-# EMAIL_PORT = 587
-# EMAIL_USE_TLS = True
-# DEFAULT_FROM_EMAIL = 'newspaperprojectdjango@gmail.com'
-
 
 APSCHEDULER_DATETIME_FORMAT = "N j, Y, f:s a"
 APSCHEDULER_RUN_NOW_TIMEOUT = 25
