@@ -5,7 +5,7 @@ from datetime import timedelta
 from django.db.models import Q
 from .models import User, Post
 
-from environ import EMAIL
+from environ import EMAIL_HOST_USER
 
 
 def notify_subscribers_weekly():
@@ -28,7 +28,7 @@ def notify_subscribers_weekly():
             msg = EmailMultiAlternatives(
                 subject=f'Здравствуй, {sub}. Вот список новых статей за неделю '
                         f'в твоих любимых категориях.',
-                from_email=EMAIL,
+                from_email=EMAIL_HOST_USER,
                 to=[sub.email],
             )
 

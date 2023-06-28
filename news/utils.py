@@ -2,7 +2,7 @@ from django.contrib.auth.models import User
 from django.core.mail import EmailMultiAlternatives, get_connection, send_mail
 from django.template.loader import render_to_string
 
-from environ import EMAIL
+from environ import EMAIL_HOST_USER
 import requests
 
 
@@ -31,7 +31,7 @@ def send_sub_emails(post):
     for sub in subscribers:
         msg = EmailMultiAlternatives(
             subject=f'Здравствуй, {sub}. Новая статья в твоём любимом разделе!',
-            from_email=EMAIL,
+            from_email=EMAIL_HOST_USER,
             to=[sub.email],
         )
 

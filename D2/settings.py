@@ -15,7 +15,7 @@ from django.urls import reverse
 
 from django.conf.global_settings import STATICFILES_DIRS
 
-from environ import DJANGO_SK, EMAIL, EMAIL_PASSWORD
+import environ
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -25,7 +25,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/4.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = DJANGO_SK
+SECRET_KEY = environ.DJANGO_SK
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -144,8 +144,8 @@ STATIC_ROOT = BASE_DIR / 'static'
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 LOGIN_URL = '/accounts/login'
-LOGIN_REDIRECT_URL = '/news'
-LOGOUT_REDIRECT_URL = '/news'
+LOGIN_REDIRECT_URL = '/'
+LOGOUT_REDIRECT_URL = '/'
 
 
 ACCOUNT_EMAIL_REQUIRED = True
@@ -165,12 +165,19 @@ AUTHENTICATION_BACKENDS = [
 ACCOUNT_FORMS = {'signup': 'news.forms.CustomSignupForm', }
 
 #Отправка email
-EMAIL_HOST = "smtp.gmail.com"
-EMAIL_HOST_USER = EMAIL
-EMAIL_HOST_PASSWORD = EMAIL_PASSWORD
-EMAIL_PORT = 587
-EMAIL_USE_TLS = True
-DEFAULT_FROM_EMAIL = EMAIL
+EMAIL_HOST = environ.EMAIL_HOST
+EMAIL_HOST_USER = environ.EMAIL_HOST_USER
+EMAIL_HOST_PASSWORD = environ.EMAIL_HOST_PASSWORD
+EMAIL_PORT = environ.EMAIL_PORT
+EMAIL_USE_TLS = environ.EMAIL_USE_TLS
+DEFAULT_FROM_EMAIL = environ.EMAIL_HOST_USER
+
+# EMAIL_HOST = 'smtp.gmail.com'
+# EMAIL_HOST_USER = 'newspaperprojectdjango@gmail.com'
+# EMAIL_HOST_PASSWORD = 'qygameoefsnzicug'
+# EMAIL_PORT = 587
+# EMAIL_USE_TLS = True
+# DEFAULT_FROM_EMAIL = 'newspaperprojectdjango@gmail.com'
 
 
 APSCHEDULER_DATETIME_FORMAT = "N j, Y, f:s a"
@@ -190,7 +197,7 @@ INTERNAL_IPS = [
 ]
 
 ADMINS = [
-    ('onehandedpirate', EMAIL)
+    ('onehandedpirate', environ.EMAIL_HOST_USER)
 ]
 
 LOGGING = {

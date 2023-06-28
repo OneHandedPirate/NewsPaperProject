@@ -4,7 +4,7 @@
 {% block title %}Sign up{% endblock %}
 
 {% block content %}
-    <h1 class="mb-5">Sign up form</h1>
+    <h1 class="mb-5 mt-4">Sign up form</h1>
     <div class="container d-flex flex-column">
         <form method="post" action="{% url 'account_signup' %}">
             {% csrf_token %}
