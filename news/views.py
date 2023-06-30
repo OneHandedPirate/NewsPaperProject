@@ -278,14 +278,16 @@ def add_category(request):
 @require_POST
 def vote(request, pk):
     user = request.user
-    postvote = PostVote.objects.filter(user_id=user, post_id=Post.objects.get(pk=pk))
-    if not postvote:
+
+    post_vote = PostVote.objects.filter(user_id=user, post_id=Post.objects.get(pk=pk))
+    if not post_vote and Post.objects.get(pk=pk).author != user:
         PostVote.objects.create(user_id=user, post_id=Post.objects.get(pk=pk))
     return JsonResponse({"success": True})
 
 
 def thanks(request):
     return render(request, 'news/thanks.html', context={'menu': menu})
+
 
 def permission_denied_view(request, exception=None):
     context = {'message': str(exception), 'menu': menu}
