@@ -1,121 +1,82 @@
-Добавил фидбэк форму на странице Contact Us, некоторые другие изменения.
+# NewsPaperProject
+My very first Django project (spring 2023)
+<hr>
 
-Оптимизировал запросы к бд (при авторизированном пользователе их количество при загрузке главной страницы доходило до 85(!), удалось снизить до 4-6 путем включения кэширования, использования переменных в шаблонах и методов annotate и prefetch_related. Дальнейшая оптимизация в планах). 
+### Techs and languages:<br>
+![Python](https://img.shields.io/badge/python-3670A0?style=for-the-badge&logo=python&logoColor=ffdd54)
+![JavaScript](https://img.shields.io/badge/javascript-%23323330.svg?style=for-the-badge&logo=javascript&logoColor=%23F7DF1E)
+![Django](https://img.shields.io/badge/django-%23092E20.svg?style=for-the-badge&logo=django&logoColor=white)
+![Bootstrap](https://img.shields.io/badge/bootstrap-%238511FA.svg?style=for-the-badge&logo=bootstrap&logoColor=white)
+![SQLite](https://img.shields.io/badge/sqlite-%2307405e.svg?style=for-the-badge&logo=sqlite&logoColor=white)
 
-Добавил задание D6. Отписка/подписка реализована через AJAX-запросы. Механизм реализован как из списка постов, так и на странице конкретного поста.
+<hr>
 
-Добавил модальное окно для добавления категорий.
+### Installation:
 
-Добавил возможность оставлять комментарии на странице новостей. 
+- clone the repository:<br>`git clone https://github.com/OneHandedPirate/NewsPaperProject.git`
+- cd to the project folder:<br>`cd NewsPaperProject`
+- create and activate virtual environment:<br>`virtualenv venv`<br>`source venv/bin/activate`
+- install all dependencies:<br>`pip install -r requirements.txt`
+- create `.env` file with the following variables:
+    + `DJANGO_SK` - DJANGO Secret Key;
+    + `EMAIL_HOST_USER` - email (used to send emails to users); 
+    + `EMAIL_HOST_PASSWORD` - email app password; 
+    + `EMAIL_HOST` - SMTP address;
+    + `EMAIL_PORT` - SMTP port;
+    + `EMAIL_USE_TLS` - boolean; 
+    + `EMAIL_USE_SSL` - boolean;
 
-Добавил задание D4. Вместо отдельной страницы с подтверждением удаления сделал модальное окно.
+### Description:
+NewsPaperProject is a simple website built using Django, where authenticated users can write articles on any topic. Users can also comment on and rate articles written by other users. Additionally, users have the ability to subscribe to specific categories of articles. 
 
-Shell-команды:
+### Features:
 
-Импортируем модели для работы с ними:
+- <b>Registration</b>:<br>When registering one can choose to become author. Authors can write the Articles and News as well as create new categories. Non-author users can become author any moment.
+- <b>Social Authentication</b>:<br>Users can log in using their Google account.
+- <b>Search</b>:<br>Users can search for posts using author/post title/publish date.
+- <b>Subscription to category</b>:<br>Authenticated users can subscribe categories. When new post is published all subscribed users are notified viw email. Subscription to category is implemented via AJAX-requests (without reloading the page)
+- <b>Add comments</b>:<br>Authenticated users can add comments to posts. Comment authors can also delete them. Implemented via AJAX-requests. 
+- <b>Post edition/deletion</b>:<br>Authors can edit or delete their own posts.
+- <b>Voting</b>:<br>Authenticated users can vote on posts (but  not their authors). Implemented via AJAX-requests.
+- <b>Feedback</b>:<br>Authenticated users can send feedback via Contact Us form. Feedback is sent to your email (EMAIL_HOST_USER).
 
-```
-from django.contrib.auth.models import User
-from news.models import *
-```
+### Screenshots:
 
-Создаем двух юзеров:
-
-```
-User.objects.create_user(username='OneHandedPirate', email='some@email.com', password='12345')
-User.objects.create_user(username='SomeRandomGuy', email='another@email.com', password='54321')
-```
-
-
-Создаем 2 авторов из ранее созданных юрезов:
-
-```
-Author.objects.create(author_user=User.objects.get(username='OneHandedPirate'))
-Author.objects.create(author_user=User.objects.get(username='SomeRandomGuy'))
-```
-
-
-Создаем 4 категории:
-
-```
-Category.objects.create(name='Спорт')
-Category.objects.create(name='Политика')
-Category.objects.create(name='Технологии')
-Category.objects.create(name='Развлечения')
-```
-
-
-Создаем 3 поста:
-
-```
-Post.objects.create(author=Author.objects.get(author_user__username='OneHandedPirate'), title='О спорт ты мир!', text='Статья о Пьере де Кубернете')
-Post.objects.create(author=Author.objects.get(author_user__username='SomeRandomGuy'), type='N', title='Новости технологических развлечений', text='Репортаж из Япони
-и')
-Post.objects.create(author=Author.objects.get(author_user__username='OneHandedPirate'), title='Статья о политике', text='Какой-то текст')
-```
+- Sign up page.
+![sign up.png](screenshots%2Fsign%20up.png)
 
 
-Задаем катеогории статьям: 
-
-```
-Post.objects.get(title='Статья о политике').category.set([Category.objects.get(name='Политика'), Category.objects.get(name='Развлечения')])  
-Post.objects.get(title='О спорт ты мир!').category.set([Category.objects.get(name='Спорт')])
-Post.objects.get(title='Новости технологических развлечений').category.set([Category.objects.get(name='Развлечения'), Category.objects.get(name='Технологии')])
-```
+- Login page with Google auth button.
+![login.png](screenshots%2Flogin.png)
 
 
-Создаем комментарии:
+- Main page with the list of posts. The categories subscribed by the current user are dark.
+![main_page.png](screenshots%2Fmain_page.png)
 
-```
-Comment.objects.create(post=Post.objects.get(title='О спорт ты мир!'), user=User.objects.get(username='OneHandedPirate'), text='Отличная статья!')
-Comment.objects.create(post=Post.objects.get(title='О спорт ты мир!'), user=User.objects.get(username='SomeRandomGuy'), text='Подтверждаю!')
-Comment.objects.create(post=Post.objects.get(title='Новости технологических развлечений'), user=User.objects.get(username='OneHandedPirate'), text='Вот это да!')
-Comment.objects.create(post=Post.objects.get(title='Статья о политике'), user=User.objects.get(username='OneHandedPirate'), text='Политика- грязное дело!')
-```
 
-Ставим лайки/дизлайки постам и комментариям:
+- Post details page. Edit and delete buttons are visible only for author of the post.
+![detail_view.png](screenshots%2Fdetail_view.png)
 
-```
-Post.objects.get(title='О спорт ты мир!').like()
-Comment.objects.get(text='Вот это да!').like()
-Post.objects.get(pk=2).dislike()
-Comment.objects.get(pk=2).dislike()
-```
 
-Обновляем рейтинг авторов:
+- Add comment modal window.
+![create_comment.png](screenshots%2Fcreate_comment.png)
 
-```
-Author.objects.get(author_user__username='OneHandedPirate').update_rating()
-Author.objects.get(author_user__username='SomeRandomGuy').update_rating()
-```
 
-Определяем лучшего автора и выводим его поля:
+- Comment on the post page. Delete button is visible only for author of the comment.
+![comment.png](screenshots%2Fcomment.png)
 
-```
-best_author = Author.objects.all().order_by('-rating')[0]
-best_author.author_user
-best_author.rating
-```
 
-Определяем лучший пост и выводим его поля: 
+- Post delete confirmation.
+![postdelete_confirmation.png](screenshots%2Fpostdelete_confirmation.png)
 
-```
-best_post = Post.objects.order_by('-rating')[0]
-best_post.publish_time.strftime('%d.%m.%Y')
-best_post.author
-best_post.title
-best_post.preview()
-```
 
-Выводим поля комментариев лучшего поста:
+- Add post page. The add post and add category menu navbar items are visible only for authors.
+![add_post.png](screenshots%2Fadd_post.png)
 
-```
-n = 0
-for i in best_post.comment_set.all():
-  n+=1
-  print(f‘Комментарий #{n}’)    
-  i.publish_time.strftime('%d.%m.%Y')
-  i.user
-  i.rating
-  i.text
-```
+
+- Add category modal window.
+![add_category.png](screenshots%2Fadd_category.png)
+
+
+- Feedback form.
+![Feedback_form.png](screenshots%2FFeedback_form.png)
