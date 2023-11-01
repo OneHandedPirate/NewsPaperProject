@@ -46,8 +46,8 @@ def send_contact_email(author, email, form):
     send_mail(
         f'[NewsPaperProject] New message from {author}',
         f'Subject: {form.cleaned_data["title"]}\n\n{form.cleaned_data["text"]}\n\nUser email: {email}',
-        EMAIL,
-        [EMAIL],
+        EMAIL_HOST_USER,
+        [EMAIL_HOST_USER],
         fail_silently=False
     )
 
