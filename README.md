@@ -11,7 +11,7 @@ My very first educational Django project (spring 2023)
 
 <hr>
 
-### Installation:
+### Installation and launch:
 
 - clone the repository:<br>`git clone https://github.com/OneHandedPirate/NewsPaperProject.git`
 - cd to the project folder:<br>`cd NewsPaperProject`
@@ -25,6 +25,10 @@ My very first educational Django project (spring 2023)
     + `EMAIL_PORT` - SMTP port;
     + `EMAIL_USE_TLS` - boolean; 
     + `EMAIL_USE_SSL` - boolean;
+- start dev server:<br>`python manage.py runserver`
+
+* Superuser is already created. Login: admin, password: 12345
+
 
 ### Description:
 NewsPaperProject is a simple website built using Django, where authenticated users can write articles on any topic. Users can also comment on and rate articles written by other users. Additionally, users have the ability to subscribe to specific categories of articles. 
